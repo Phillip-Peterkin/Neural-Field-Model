@@ -1,0 +1,183 @@
+Log file: C:\Neural Network Sim\analysis_output\logs\analysis_log_20251020_122403.txt
+
+=================================================================
+STAGE 1: DATA DISCOVERY AND QUALITY CONTROL
+=================================================================
+
+Discovering subjects and sessions...
+Discovering subjects and sessions in: C:\openneuro\ds004752
+  sub-01: 4 sessions
+  sub-02: 7 sessions
+  sub-03: 3 sessions
+  sub-04: 2 sessions
+  sub-05: 3 sessions
+  sub-06: 7 sessions
+  sub-07: 4 sessions
+  sub-08: 4 sessions
+  sub-09: 2 sessions
+  sub-10: 2 sessions
+  sub-11: 6 sessions
+  sub-12: 6 sessions
+  sub-13: 6 sessions
+  sub-14: 6 sessions
+Found 14 subjects
+{Unrecognized field name "subject_names".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_complete_analysis', 'C:\Neural Network Sim\run_complete_analysis.m', 62)" style="font-weight:bold">run_complete_analysis</a> (<a href="matlab: opentoline('C:\Neural Network Sim\run_complete_analysis.m',62,0)">line 62</a>)
+fprintf('\nFound %d subjects:\n', length(subjects_info.subject_names));
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+% Check the structure
+config = initialize_analysis_config();
+
+=== Initializing Analysis Configuration ===
+Dataset: ds004752 (Verbal Working Memory)
+MATLAB Version: 25.2.0.2998904 (R2025b)
+
+Validating configuration...
+✓ FieldTrip initialized
+
+=== Configuration Summary ===
+Version: 1.0.1
+Date: 2025-10-20 12:28:48
+MATLAB: 25.2.0.2998904 (R2025b)
+FieldTrip: unknown
+Data: C:\openneuro\ds004752
+Output: C:\Neural Network Sim\analysis_output
+Random seed: 42
+Parallel processing: true
+
+Preprocessing Settings:
+  Resample FIRST: 500 Hz (from original rate)
+  Highpass: 1.0 Hz
+  Lowpass: 200.0 Hz
+  Notch: [60 120 180] Hz
+  Filter order: 4
+  Detrend: true
+  Demean: true
+
+✓ Configuration initialized successfully
+=====================================
+
+subjects_info = discover_subjects_sessions(config.paths.data);
+Discovering subjects and sessions in: C:\openneuro\ds004752
+  sub-01: 4 sessions
+  sub-02: 7 sessions
+  sub-03: 3 sessions
+  sub-04: 2 sessions
+  sub-05: 3 sessions
+  sub-06: 7 sessions
+  sub-07: 4 sessions
+  sub-08: 4 sessions
+  sub-09: 2 sessions
+  sub-10: 2 sessions
+  sub-11: 6 sessions
+  sub-12: 6 sessions
+  sub-13: 6 sessions
+  sub-14: 6 sessions
+Found 14 subjects
+
+% See what fields exist
+disp('Fields in subjects_info:');
+Fields in subjects_info:
+disp(fieldnames(subjects_info));
+    {'sub_01'}
+    {'sub_02'}
+    {'sub_03'}
+    {'sub_04'}
+    {'sub_05'}
+    {'sub_06'}
+    {'sub_07'}
+    {'sub_08'}
+    {'sub_09'}
+    {'sub_10'}
+    {'sub_11'}
+    {'sub_12'}
+    {'sub_13'}
+    {'sub_14'}
+
+
+% See the structure
+disp('Structure:');
+Structure:
+disp(subjects_info);
+    sub_01: {4×1 cell}
+    sub_02: {7×1 cell}
+    sub_03: {3×1 cell}
+    sub_04: {2×1 cell}
+    sub_05: {3×1 cell}
+    sub_06: {7×1 cell}
+    sub_07: {4×1 cell}
+    sub_08: {4×1 cell}
+    sub_09: {2×1 cell}
+    sub_10: {2×1 cell}
+    sub_11: {6×1 cell}
+    sub_12: {6×1 cell}
+    sub_13: {6×1 cell}
+    sub_14: {6×1 cell}
+
+clear all
+close all
+clc
+run_complete_analysis
+
+=================================================================
+  COMPLETE ANALYSIS PIPELINE - ds004752
+  Testing Neural Prerequisites for Access
+=================================================================
+
+Initializing configuration...
+
+=== Initializing Analysis Configuration ===
+Dataset: ds004752 (Verbal Working Memory)
+MATLAB Version: 25.2.0.2998904 (R2025b)
+-------------------------------------------------------------------------------------------
+FieldTrip is developed by members and collaborators of the Donders Institute for Brain,
+Cognition and Behaviour at Radboud University, Nijmegen, the Netherlands.
+
+                          --------------------------
+                        /                            \
+                     ------------------------------------
+                    /                                    \
+          -------------------------------------------------
+         /                            /\/\/\/\/\ 
+         ---------------------------------------------------
+                  |        F  i  e  l  d  T  r  i  p       |
+                  ------------------------------------------
+                   \                                      /
+                     ------------------------------------
+                          \            /
+                            ----------
+
+Please cite the FieldTrip reference paper when you have used FieldTrip in your study.
+Robert Oostenveld, Pascal Fries, Eric Maris, and Jan-Mathijs Schoffelen. FieldTrip: Open
+Source Software for Advanced Analysis of MEG, EEG, and Invasive Electrophysiological Data.
+Computational Intelligence and Neuroscience, vol. 2011, Article ID 156869, 9 pages, 2011.
+doi:10.1155/2011/156869.
+-------------------------------------------------------------------------------------------
+
+Validating configuration...
+✓ FieldTrip initialized
+
+=== Configuration Summary ===
+Version: 1.0.1
+Date: 2025-10-20 12:31:52
+MATLAB: 25.2.0.2998904 (R2025b)
+FieldTrip: unknown
+Data: C:\openneuro\ds004752
+Output: C:\Neural Network Sim\analysis_output
+Random seed: 42
+Parallel processing: true
+
+Preprocessing Settings:
+  Resample FIRST: 500 Hz (from original rate)
+  Highpass: 1.0 Hz
+  Lowpass: 200.0 Hz
+  Notch: [60 120 180] Hz
+  Filter order: 4
+  Detrend: true
+  Demean: true
+
+✓ Configuration initialized successfully
+=====================================
+
