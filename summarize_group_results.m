@@ -18,37 +18,30 @@ G.verbose            = getfield_or(config,'group.verbose',true);
 subs = dir(fullfile(config.paths.results,'sub-*')); subs = subs([subs.isdir]);
 N = numel(subs);
 
-% Running stats (sum & count) so we never keep large vectors in memory
-rs = initRunningStats();
+    % Running stats (sum & count) so we never keep large vectors in memory
+    rs = initRunningStats();
+    
+    for i = 1:N
+        sid = subs(i).name; sdir = fullfile(subs(i).folder, sid);
+        if G.verbose, fprintf('[group] %s\n', sid); end
 
-for i = 1:N
-    sid = subs(i).name; sdir = fullfile(subs(i).folder, sid);
-    if G.verbose, fprintf('[group] %s\n', sid); end
-
-% inside the spectral section, replace the slope and band pulls with:
-if isfield(S,'aperiodic') && isfield(S.aperiodic,'slope')
-    rs = rs_add(rs,'slope', double(S.aperiodic.slope));
-elseif isfield(S,'per_channel') && istable(S.per_channel)
-    sc = S.per_channel;
-    slopeVec = hft_utils('getvar', sc, {'slope','aperiodic_slope','exponent','aperiodicExponent','ap_slope'});
-    if ~isempty(slopeVec)
-        rs = rs_add(rs,'slope', mean(double(slopeVec),'omitnan'));
+    % slope
+    if isfield(S,'aperiodic') && isfield(S.aperiodic,'slope')
+        rs = rs_add(rs,'slope', double(S.aperiodic.slope));
+    elseif isfield(S,'per_channel') && istable(S.per_channel)
+        svec = hft_utils('getvar', S.per_channel, {'slope','aperiodic_slope','exponent','ap_slope'});
+        if ~isempty(svec), rs = rs_add(rs,'slope', mean(double(svec),'omitnan')); end
     end
-end
-% band powers (theta, alpha, gamma) with auto-detect:
-thetaVec = [];
-alphaVec = [];
-gammaVec = [];
-if isfield(S,'per_channel') && istable(S.per_channel)
-    thetaVec = hft_utils('getvar', S.per_channel, {'theta_power','theta','ThetaPower','thetaP'});
-    alphaVec = hft_utils('getvar', S.per_channel, {'alpha_power','alpha','AlphaPower','alphaP'});
-    gammaVec = hft_utils('getvar', S.per_channel, {'gamma_power','gamma','GammaPower','gammaP'});
-end
-if ~isempty(thetaVec), rs = rs_add(rs,'theta_power', mean(double(thetaVec),'omitnan')); end
-if ~isempty(alphaVec), rs = rs_add(rs,'alpha_power', mean(double(alphaVec),'omitnan')); end
-if ~isempty(gammaVec), rs = rs_add(rs,'gamma_power', mean(double(gammaVec),'omitnan')); end
-
-
+    
+    % band powers
+    if isfield(S,'per_channel') && istable(S.per_channel)
+        tv = hft_utils('getvar', S.per_channel, {'theta_power','theta'});
+        av = hft_utils('getvar', S.per_channel, {'alpha_power','alpha'});
+        gv = hft_utils('getvar', S.per_channel, {'gamma_power','gamma'});
+        if ~isempty(tv), rs = rs_add(rs,'theta_power', mean(double(tv),'omitnan')); end
+        if ~isempty(av), rs = rs_add(rs,'alpha_power', mean(double(av),'omitnan')); end
+        if ~isempty(gv), rs = rs_add(rs,'gamma_power', mean(double(gv),'omitnan')); end
+    end
 
     %% -------- connectivity --------
     cp = fullfile(sdir,'connectivity.mat');
