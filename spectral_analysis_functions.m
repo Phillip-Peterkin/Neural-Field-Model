@@ -1,206 +1,106 @@
 function out = spectral_analysis_functions(data_pre, cfg)
-% SPECTRAL_ANALYSIS_FUNCTIONS
-% Stage 3: Power spectrum + 1/f (aperiodic) fit + band powers.
-% Robust to empty inputs and safe for batch runs.
-%
-% INPUTS
-%   data_pre : FieldTrip raw-like struct from preprocessing_functions
-%   cfg      : global config struct; uses cfg.spectral fields if present
-%
-% OUTPUT
-%   out : struct with fields
-%       .status            : 'ok' | 'skip' | 'fail'
-%       .fs                : sampling rate (Hz)
-%       .freq              : frequency vector (Hz)
-%       .psd               : average power spectral density (uV^2/Hz)
-%       .aperiodic         : struct with slope, intercept (log-log fit)
-%       .bands             : struct with band powers
-%       .per_channel       : table with per-channel band powers and slope
-%       .diagnostics       : struct (window_sec, method, notes)
-%
-% NOTE
-%   Uses FieldTrip ft_freqanalysis (multitaper). Fits 1/f on log10 power.
+% Stage 3 spectra and 1/f slope, memory‑safe and table‑robust.
 
-% ---- Defaults (robust) ----
+arguments
+    data_pre (1,1) struct
+    cfg struct = struct()
+end
+
 out = default_out();
 
+% Guard
+if ~isstruct(data_pre) || ~isfield(data_pre,'trial') || isempty(data_pre.trial)
+    out.status = "skip"; out.notes = "empty input"; return
+end
+
+% Params
+fs   = data_pre.fsample;
+foi  = getf(cfg,'spectral.foi', 1:1:150);
+win  = getf(cfg,'spectral.win_sec', 1.0);   % shorter to reduce RAM
+over = getf(cfg,'spectral.overlap', 0.0);
+fitb = getf(cfg,'spectral.fit_band', [2 40]);
+theta = getf(cfg,'spectral.theta',[4 7]);
+alpha = getf(cfg,'spectral.alpha',[8 12]);
+beta  = getf(cfg,'spectral.beta', [13 30]);
+gamma = getf(cfg,'spectral.gamma',[30 80]);
+
+% Chunk the data into windows to bound memory
 try
-    % Validate input
-    if nargin < 1 || isempty(data_pre) || ~isfield(data_pre,'trial') || isempty(data_pre.trial)
-        out.status = 'skip';
-        out.diagnostics.notes = 'Empty or malformed input data';
-        return
-    end
-
-    if nargin < 2 || ~isstruct(cfg)
-        cfg = struct();
-    end
-
-    if ~isfield(cfg,'spectral') || ~isstruct(cfg.spectral)
-        cfg.spectral = struct();
-    end
-
-    % Parameters with sane defaults
-    p = cfg.spectral;
-    p.foi         = getfield_or(p,'foi',        1:0.5:150);   % frequencies of interest (Hz)
-    p.win_sec     = getfield_or(p,'win_sec',    2.0);          % Welch-like window
-    p.taper       = getfield_or(p,'taper',      'hanning');    % dpss or hanning
-    p.pad         = getfield_or(p,'pad',        'nextpow2');   % FFT padding strategy
-    p.fit_band    = getfield_or(p,'fit_band',   [2 40]);       % 1/f fit range
-    p.theta_band  = getfield_or(p,'theta',      [4 7]);
-    p.alpha_band  = getfield_or(p,'alpha',      [8 12]);
-    p.beta_band   = getfield_or(p,'beta',       [13 30]);
-    p.gamma_band  = getfield_or(p,'gamma',      [30 80]);
-    p.robust_fit  = getfield_or(p,'robust_fit', true);
-
-    % Sampling rate
-    if isfield(data_pre,'fsample')
-        fs = double(data_pre.fsample);
-    else
-        fs = infer_fs(data_pre);
-    end
-    assert(isfinite(fs) && fs > 0, 'Invalid sampling rate');
-    out.fs = fs;
-
-    % ---- Frequency analysis via FieldTrip ----
-    % Construct cfg for ft_freqanalysis
-    cfa = [];
-    cfa.method     = 'mtmfft';
-    cfa.output     = 'pow';
-    cfa.taper      = p.taper;
-    cfa.foi        = p.foi;   % explicit vector of frequencies
-    cfa.pad        = p.pad;   % 'nextpow2' or numeric seconds
-
-    % Compute spectrum per channel
-    freq = ft_freqanalysis(cfa, data_pre);  % freq.freq, freq.powspctrm (chan x freq)
-
-    % Average across trials if present
-    P = double(freq.powspctrm);    % channels x freqs
-    f = double(freq.freq(:));
-    if ~ismatrix(P)
-        P = squeeze(mean(P, 1));   % in rare cases method returns trl x chan x freq
-    end
-
-    % Guard against empties
-    if isempty(P) || isempty(f)
-        out.status = 'skip';
-        out.diagnostics.notes = 'Empty spectrum from ft_freqanalysis';
-        return
-    end
-
-    % Average PSD over channels for group summaries (keep per-channel too)
-    psd_avg = mean(P, 1, 'omitnan');
-
-    % ---- Aperiodic (1/f) fit on log10 scale ----
-    [fit_idx, fit_freqs] = pick_band_idx(f, p.fit_band);
-    logF = log10(fit_freqs);
-    logP = log10(psd_avg(fit_idx));
-
-    if p.robust_fit
-        coeff = robustfit(logF, logP); % logP = a + b*logF; coeff(1)=a, coeff(2)=b
-        intercept = coeff(1);
-        slope     = coeff(2);
-    else
-        X = [ones(numel(logF),1) logF(:)];
-        B = X \ logP(:);
-        intercept = B(1); slope = B(2);
-    end
-
-    % ---- Band powers (area under PSD in bands) ----
-    bands = struct();
-    bands.theta = bandpower_trapz(f, psd_avg, p.theta_band);
-    bands.alpha = bandpower_trapz(f, psd_avg, p.alpha_band);
-    bands.beta  = bandpower_trapz(f, psd_avg, p.beta_band);
-    bands.gamma = bandpower_trapz(f, psd_avg, p.gamma_band);
-
-    % Per-channel metrics table
-    per_table = per_channel_metrics(f, P, p);
-
-    % ---- Package output ----
-    out.status      = 'ok';
-    out.freq        = f;
-    out.psd         = psd_avg(:)';
-    out.aperiodic   = struct('slope', slope, 'intercept', intercept, 'fit_band', p.fit_band);
-    out.bands       = bands;
-    out.per_channel = per_table;
-    out.diagnostics = struct('window_sec', p.win_sec, 'method', cfa.method, ...
-                             'taper', p.taper, 'notes', "");
+    dcfg = struct('length', win, 'overlap', over);
+    data_small = ft_redefinetrial(dcfg, data_pre);
 catch ME
-    out.status = 'fail';
-    out.diagnostics.notes = ME.message;
     warning('%s', ME.message);
-end
-end
-
-%% ================= Helpers =================
-function out = default_out()
-out = struct('status','skip','fs',NaN,'freq',[],'psd',[], ...
-             'aperiodic',struct('slope',NaN,'intercept',NaN,'fit_band',[NaN NaN]), ...
-             'bands',struct('theta',NaN,'alpha',NaN,'beta',NaN,'gamma',NaN), ...
-             'per_channel',table(), ...
-             'diagnostics',struct('window_sec',NaN,'method','', 'taper','', 'notes',''));
+    data_small = data_pre; % fallback
 end
 
-function v = getfield_or(s, name, defaultVal)
-if isstruct(s) && isfield(s, name) && ~isempty(s.(name))
-    v = s.(name);
+% Frequency analysis with average across trials inside FieldTrip
+c = [];
+c.method      = 'mtmfft';
+c.taper       = 'hanning';
+c.output      = 'pow';
+c.foi         = foi;
+c.keeptrials  = 'no';           % average inside to save memory
+c.pad         = 'maxperlen';    % avoid huge zero‑padding
+F = ft_freqanalysis(c, data_small);
+
+% Ensure consistent shape: [chan x freq]
+if ndims(F.powspctrm) == 3
+    P = squeeze(hft_utils('nanmean', F.powspctrm, 1));
 else
-    v = defaultVal;
+    P = F.powspctrm;
 end
+f = F.freq(:);
+
+% Per‑channel table with auto growth
+nch = numel(F.label);
+per = table();
+per = hft_utils('addorreplace', per, 'theta_power', nan(nch,1));
+per = hft_utils('addorreplace', per, 'alpha_power', nan(nch,1));
+per = hft_utils('addorreplace', per, 'beta_power',  nan(nch,1));
+per = hft_utils('addorreplace', per, 'gamma_power', nan(nch,1));
+per = hft_utils('addorreplace', per, 'slope',       nan(nch,1));  % always create 'slope'
+
+% Fit slope and bands
+fb = f>=fitb(1) & f<=fitb(2);
+logf = log10(f(fb));
+for ch = 1:nch
+    psd = double(P(ch,:)).';
+    per.theta_power(ch) = bandpow(f, psd, theta);
+    per.alpha_power(ch) = bandpow(f, psd, alpha);
+    per.beta_power(ch)  = bandpow(f, psd, beta);
+    per.gamma_power(ch) = bandpow(f, psd, gamma);
+
+    y = log10(psd(fb));
+    m = isfinite(logf) & isfinite(y);
+    if nnz(m) >= 10
+        b = [logf(m) ones(nnz(m),1)] \ y(m);
+        per.slope(ch) = b(1);
+    end
 end
 
-function fs = infer_fs(data)
+out.status = "ok";
+out.freq   = f;
+out.pow    = P;
+out.per_channel = per;
+out.aperiodic.slope_mean = mean(per.slope, 'omitnan');
+
+end
+
+% ------- helpers -------
+function p = bandpow(f, psd, band)
+b = hft_utils('sanitizeband', band, max(f)*2, [4 7]); % fs not needed here; just clamp union
+idx = f>=b(1) & f<=b(2);
+if any(idx), p = trapz(f(idx), psd(idx)); else, p = NaN; end
+end
+
+function v = getf(cfg, dotted, d)
 try
-    if isfield(data,'time') && ~isempty(data.time) && iscell(data.time)
-        t = data.time{1};
-        dt = median(diff(t));
-        fs = 1/dt;
-    else
-        fs = NaN;
-    end
-catch
-    fs = NaN;
-end
+    parts = split(string(dotted),'.'); S = cfg;
+    for i=1:numel(parts), f = strtrim(parts{i}); if isfield(S,f), S = S.(f); else, v=d; return; end, end
+    if isempty(S), v=d; else, v=S; end
+catch, v=d; end
 end
 
-function [idx, ff] = pick_band_idx(f, band)
-lo = band(1); hi = band(2);
-idx = f >= lo & f <= hi;
-ff  = f(idx);
-end
-
-function bp = bandpower_trapz(f, psd, band)
-[idx, ff] = pick_band_idx(f, band);
-if ~any(idx)
-    bp = NaN;
-else
-    bp = trapz(ff, psd(idx));
-end
-end
-
-function T = per_channel_metrics(f, P, p)
-% P: channels x freqs
-nch = size(P,1);
-sl  = nan(nch,1);
-th  = nan(nch,1); al = nan(nch,1); be = nan(nch,1); ga = nan(nch,1);
-
-[fit_idx, fit_freqs] = pick_band_idx(f, p.fit_band);
-logF = log10(fit_freqs);
-
-for c = 1:nch
-    ps = double(P(c,:));
-    logP = log10(ps(fit_idx));
-    if any(isfinite(logP)) && numel(logP) == numel(logF)
-        % robust linear fit
-        cff = robustfit(logF, logP);
-        sl(c) = cff(2);
-    end
-    th(c) = bandpower_trapz(f, ps, p.theta_band);
-    al(c) = bandpower_trapz(f, ps, p.alpha_band);
-    be(c) = bandpower_trapz(f, ps, p.beta_band);
-    ga(c) = bandpower_trapz(f, ps, p.gamma_band);
-end
-
-T = table(sl, th, al, be, ga, 'VariableNames', ...
-          {'slope','theta_power','alpha_power','beta_power','gamma_power'});
+function out = default_out()
+out = struct('status',"skip",'notes',"",'freq',[],'pow',[],'per_channel',table(),'aperiodic',struct());
 end
