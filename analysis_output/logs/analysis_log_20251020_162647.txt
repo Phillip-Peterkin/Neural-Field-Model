@@ -1,0 +1,158 @@
+✓ FieldTrip initialized
+
+=== Configuration Summary ===
+Version: 1.0.1
+Date: 2025-10-20 16:26:47
+MATLAB: 25.2.0.2998904 (R2025b)
+Data:   C:\openneuro\ds004752
+Output: C:\Neural Network Sim\analysis_output
+Random seed: 42
+
+✓ Configuration initialized successfully
+=====================================
+
+Log file: C:\Neural Network Sim\analysis_output\logs\analysis_log_20251020_162647.txt
+
+=================================================================
+STAGE 1: DATA DISCOVERY AND QUALITY CONTROL
+=================================================================
+
+Discovering subjects and sessions in: C:\openneuro\ds004752
+  sub-01: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-02: 7 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06, ses-07)
+  sub-03: 3 sessions (ses-01, ses-02, ses-03)
+  sub-04: 2 sessions (ses-01, ses-02)
+  sub-05: 3 sessions (ses-01, ses-02, ses-03)
+  sub-06: 7 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06, ses-07)
+  sub-07: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-08: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-09: 2 sessions (ses-01, ses-02)
+  sub-10: 2 sessions (ses-01, ses-02)
+  sub-11: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-12: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-13: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-14: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+Found 14 subjects
+Found 1 subjects:
+{Unrecognized field name "id_display".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_complete_analysis', 'C:\Neural Network Sim\run_complete_analysis.m', 85)" style="font-weight:bold">run_complete_analysis</a> (<a href="matlab: opentoline('C:\Neural Network Sim\run_complete_analysis.m',85,0)">line 85</a>)
+    fprintf('  %s: %d sessions\n', s.id_display, numel(s.sessions));
+                                   ^^^^^^^^^^^^
+} 
+IdleTimeout has been reached.
+Parallel pool using the 'Processes' profile is shutting down.
+restoredefaultpath; rehash toolboxcache
+addpath(genpath('C:\MATLAB\eeglab2025.0.0')); eeglab nogui; close all
+[Warning: Function labindex has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function numlabs has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function bitshift has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function full has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function isequal has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function isscalar has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function isvector has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function numel has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function set has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function setstr has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function sparse has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function speye has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function strcmpi has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function strfind has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function strncmp has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function strncmpi has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function text has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function transpose has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function all has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function any has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function diff has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function erfinv has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function filter has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function findstr has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function isfinite has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function realmax has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function realmin has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning: Function sign has the same name as a MATLAB built-in. We suggest you rename the function to avoid a potential name conflict.] 
+[Warning:
+
+Path Warning: It appears that you have added the path to all of the
+subfolders to EEGLAB. This may create issues with some EEGLAB extensions
+If EEGLAB cannot start or your experience a large number of warning
+messages, remove all the EEGLAB paths then go to the EEGLAB folder
+and start EEGLAB which will add all the necessary paths.
+
+] 
+eeglab: options file is C:\Users\peter\eeg_options.m
+Retrieving plugin versions from server...
+Retrieving download statistics...
+EEGLAB: adding "EEG-BIDS" v? (see >> help eegplugin_eegbids) - new version 10.3 available
+EEGLAB: adding "EEG-BIDS-master" v? (see >> help eegplugin_eegbids)
+EEGLAB: adding "ICLabel" v? (see >> help eegplugin_iclabel) - new version 1.7 available (critical bug fix)
+EEGLAB: adding "biosig" v? (see >> help eegplugin_biosig) - new version 3.8.4 available
+EEGLAB: adding "clean_rawdata" v? (see >> help eegplugin_clean_rawdata) - new version 2.11 available
+EEGLAB: adding "dipfit" v? (see >> help eegplugin_dipfit) - new version 5.6 available
+EEGLAB: adding "firfilt" v? (see >> help eegplugin_firfilt) - new version 2.8 available
+addpath('C:\MATLAB\fieldtrip'); ft_defaults
+-------------------------------------------------------------------------------------------
+FieldTrip is developed by members and collaborators of the Donders Institute for Brain,
+Cognition and Behaviour at Radboud University, Nijmegen, the Netherlands.
+
+                          --------------------------
+                        /                            \
+                     ------------------------------------
+                    /                                    \
+          -------------------------------------------------
+         /                            /\/\/\/\/\ 
+         ---------------------------------------------------
+                  |        F  i  e  l  d  T  r  i  p       |
+                  ------------------------------------------
+                   \                                      /
+                     ------------------------------------
+                          \            /
+                            ----------
+
+Please cite the FieldTrip reference paper when you have used FieldTrip in your study.
+Robert Oostenveld, Pascal Fries, Eric Maris, and Jan-Mathijs Schoffelen. FieldTrip: Open
+Source Software for Advanced Analysis of MEG, EEG, and Invasive Electrophysiological Data.
+Computational Intelligence and Neuroscience, vol. 2011, Article ID 156869, 9 pages, 2011.
+doi:10.1155/2011/156869.
+-------------------------------------------------------------------------------------------
+addpath('C:\Neural Network Sim')
+
+run_complete_analysis
+=================================================================
+  COMPLETE ANALYSIS PIPELINE - ds004752
+  Testing Neural Prerequisites for Access
+=================================================================
+
+Initializing configuration...
+
+
+=== Initializing Analysis Configuration ===
+Dataset: ds004752 (Verbal Working Memory)
+MATLAB Version: 25.2.0.2998904 (R2025b)
+
+Validating configuration...
+✓ FieldTrip initialized
+
+=== Configuration Summary ===
+Version: 1.0.1
+Date: 2025-10-20 16:32:28
+MATLAB: 25.2.0.2998904 (R2025b)
+FieldTrip: unknown
+Data: C:\openneuro\ds004752
+Output: C:\Neural Network Sim\analysis_output
+Random seed: 42
+Parallel processing: true
+
+Preprocessing Settings:
+  Resample FIRST: 500 Hz (from original rate)
+  Highpass: 1.0 Hz
+  Lowpass: 200.0 Hz
+  Notch: [60 120 180] Hz
+  Filter order: 4
+  Detrend: true
+  Demean: true
+
+✓ Configuration initialized successfully
+=====================================
+

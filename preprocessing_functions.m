@@ -1,397 +1,228 @@
-%% PREPROCESSING FUNCTIONS FOR ds004752 ANALYSIS
-% Auto-detecting data discovery, loading, filtering, and cleaning
-
-function subjects_info = discover_subjects_sessions(data_path)
-% DISCOVER_SUBJECTS_SESSIONS - Auto-detect all subjects and sessions
+function [data_pp, events, meta] = preprocessing_functions(cfg, raw)
+% PREPROCESSING_FUNCTIONS
+% Robust FieldTrip-based preprocessing for BIDS EEG/iEEG recordings.
 %
-% Just finds whatever exists, no assumptions about naming
-
-fprintf('Discovering subjects and sessions in: %s\n', data_path);
-
-subjects_info = struct();
-
-% Find all directories starting with 'sub'
-all_items = dir(fullfile(data_path, 'sub*'));
-subject_dirs = all_items([all_items.isdir]);
-
-for i = 1:length(subject_dirs)
-    subj_name = subject_dirs(i).name;
-    subj_path = fullfile(data_path, subj_name);
-    
-    % ONLY look for ses-* directories (not all directories)
-    session_dirs = dir(fullfile(subj_path, 'ses-*'));
-    session_dirs = session_dirs([session_dirs.isdir]);
-    
-    % Check each session directory for data
-    session_names = {};
-    for j = 1:length(session_dirs)
-        sess_name = session_dirs(j).name;  % This will be 'ses-01', 'ses-02', etc.
-        sess_path = fullfile(subj_path, sess_name);
-        
-        % Check if this directory contains eeg or ieeg data
-        has_eeg = exist(fullfile(sess_path, 'eeg'), 'dir');
-        has_ieeg = exist(fullfile(sess_path, 'ieeg'), 'dir');
-        
-        if has_eeg || has_ieeg
-            session_names{end+1} = sess_name;  % Store full name like 'ses-01'
-        end
-    end
-    
-    if ~isempty(session_names)
-        % Convert sub-01 to sub_01 for struct fieldname
-        field_name = strrep(subj_name, '-', '_');
-        subjects_info.(field_name) = session_names(:);
-        
-        fprintf('  %s: %d sessions\n', subj_name, length(session_names));
-        fprintf('    Sessions: %s\n', strjoin(session_names, ', '));
-    end
-end
-
-fprintf('Found %d subjects\n', length(fieldnames(subjects_info)));
-
-end
-
-function data = load_raw_data(data_path, subject_id, session_id, config)
-% LOAD_RAW_DATA - Auto-detect and load whatever data exists
+% Inputs
+%   cfg : struct with fields (all optional)
+%       .resample_hz   default 500
+%       .hp_hz         default 1
+%       .lp_hz         default 200
+%       .notch_hz      default [60 120 180]  % uses dftfilter
+%       .remove_eog    default true
+%       .remove_ecg    default true
+%       .car_eeg       default true          % common average ref for EEG
+%       .reref_ieeg    default 'none'        % 'none' | 'commonavg' | channel label cellstr
+%   raw : struct from load_raw_data.m with fields:
+%       .data          FieldTrip raw struct (label, trial, time, fsample, hdr, cfg)
+%       .events        table with at least onset (s) and type
+%       .channel_info  table from channels.tsv, must include 'name' and 'type'
+%       .subject_id    char
+%       .session_id    char
 %
-% Just finds the first .edf file it can
+% Outputs
+%   data_pp : FieldTrip raw struct after preprocessing
+%   events  : table, input events resynced to new sampling rate
+%   meta    : struct with bookkeeping info
 
-fprintf('Loading data for subject %s, session %s...\n', subject_id, session_id);
+assert(isstruct(raw) && isfield(raw,'data'), 'raw.data missing');
+if nargin < 1 || ~isstruct(cfg), cfg = struct; end
 
-% Convert sub_01 back to sub-01 if needed
-if contains(subject_id, '_')
-    subject_id = strrep(subject_id, '_', '-');
+% ---- defaults ----
+cfg = set_default(cfg, 'resample_hz', 500);
+cfg = set_default(cfg, 'hp_hz', 1.0);
+cfg = set_default(cfg, 'lp_hz', 200.0);
+cfg = set_default(cfg, 'notch_hz', [60 120 180]);
+cfg = set_default(cfg, 'remove_eog', true);
+cfg = set_default(cfg, 'remove_ecg', true);
+cfg = set_default(cfg, 'car_eeg', true);
+cfg = set_default(cfg, 'reref_ieeg', 'none'); % or 'commonavg' or cellstr
+
+% ---- toolboxes ----
+ensure_fieldtrip();
+ft_defaults; %#ok<*NOPRT>  % keep FT on path
+
+% ---- unpack input without polluting FT data ----
+data_in  = raw.data;
+chan_tbl = coerce_channel_table(raw);
+events   = coerce_events_table(raw);
+
+% store metadata only inside cfg.meta to avoid FT warnings
+data_in.cfg = ensure_struct(data_in.cfg);
+data_in.cfg.meta.subject_id = safe_id(raw, 'subject_id');   % no hyphens as fields
+data_in.cfg.meta.session_id = safe_id(raw, 'session_id');
+data_in.cfg.meta.channel_info = chan_tbl;
+data_in.cfg.meta.original_fsample = data_in.fsample;
+
+% ---- 0) select usable channels and drop obvious non-phys ----
+good_mask = true(height(chan_tbl),1);
+if any(ismember(chan_tbl.Properties.VariableNames,'status'))
+    bad = strcmpi(string(chan_tbl.status), "bad");
+    bad(isnan(bad)) = false;
+    good_mask = good_mask & ~bad;
+end
+if cfg.remove_eog && any(strcmpi(chan_tbl.type, 'EOG'))
+    good_mask(strcmpi(chan_tbl.type,'EOG')) = false;
+end
+if cfg.remove_ecg && any(strcmpi(chan_tbl.type, 'ECG'))
+    good_mask(strcmpi(chan_tbl.type,'ECG')) = false;
+end
+good_labels = string(chan_tbl.name(good_mask));
+cfg_sel = [];
+cfg_sel.channel = cellstr(good_labels);
+data_sel = ft_selectdata(cfg_sel, data_in);
+
+% ---- 1) resample FIRST ----
+if ~isempty(cfg.resample_hz) && abs(data_sel.fsample - cfg.resample_hz) > 1e-6
+    cfg_rs = [];
+    cfg_rs.resamplefs = cfg.resample_hz;
+    cfg_rs.detrend    = 'no';
+    data_rs = ft_resampledata(cfg_rs, data_sel);
+else
+    data_rs = data_sel;
 end
 
-% Build subject path
-subject_path = fullfile(data_path, subject_id);
-if ~exist(subject_path, 'dir')
-    error('Subject directory not found: %s', subject_path);
-end
+% ---- 2) detrend + demean ----
+cfg_pp = [];
+cfg_pp.detrend = 'yes';
+cfg_pp.demean  = 'yes';
+data_pp = ft_preprocessing(cfg_pp, data_rs);
 
-% Try to find session directory (try multiple possibilities)
-session_path = '';
-possible_sessions = {
-    session_id,                           % As provided (e.g., 'ses-01' or '01')
-    ['ses-' session_id],                  % Add ses- prefix
-    strrep(session_id, 'ses-', ''),       % Remove ses- prefix
-    ['ses-' strrep(session_id, 'ses-', '')] % Ensure ses- prefix
-};
-
-for i = 1:length(possible_sessions)
-    test_path = fullfile(subject_path, possible_sessions{i});
-    fprintf('  Trying: %s... ', test_path);
-    if exist(test_path, 'dir')
-        session_path = test_path;
-        fprintf('✓ Found!\n');
-        break;
+% ---- 3) bandpass ----
+if ~isempty(cfg.hp_hz) || ~isempty(cfg.lp_hz)
+    cfg_bp = [];
+    cfg_bp.bpfilter = 'yes';
+    if ~isempty(cfg.hp_hz) && ~isempty(cfg.lp_hz)
+        cfg_bp.bpfreq = [cfg.hp_hz cfg.lp_hz];
+    elseif ~isempty(cfg.hp_hz)
+        cfg_bp.hpfilter = 'yes';
+        cfg_bp.hpfreq   = cfg.hp_hz;
+        cfg_bp.bpfilter = 'no';
     else
-        fprintf('✗\n');
+        cfg_bp.lpfilter = 'yes';
+        cfg_bp.lpfreq   = cfg.lp_hz;
+        cfg_bp.bpfilter = 'no';
+    end
+    data_pp = ft_preprocessing(cfg_bp, data_pp);
+end
+
+% ---- 4) line noise removal with DFT filter ----
+if ~isempty(cfg.notch_hz)
+    cfg_ln = [];
+    cfg_ln.dftfilter = 'yes';
+    cfg_ln.dftfreq   = cfg.notch_hz(:)';  % row
+    data_pp = ft_preprocessing(cfg_ln, data_pp);
+end
+
+% ---- 5) rereference by modality ----
+% Use BIDS types if present, else guess from label count
+mod_types = lower(string(chan_tbl.type(good_mask)));
+is_eeg  = any(mod_types=="eeg");
+is_ieeg = any(mod_types=="ieeg") || any(mod_types=="seeg") || any(mod_types=="ecog");
+
+if is_eeg && cfg.car_eeg
+    cfg_rr = [];
+    cfg_rr.reref      = 'yes';
+    cfg_rr.refchannel = data_pp.label; % common average
+    data_pp = ft_preprocessing(cfg_rr, data_pp);
+end
+
+if is_ieeg && ~strcmpi(cfg.reref_ieeg,'none')
+    cfg_rr = [];
+    cfg_rr.reref = 'yes';
+    if ischar(cfg.reref_ieeg) || isstring(cfg.reref_ieeg)
+        if strcmpi(string(cfg.reref_ieeg),'commonavg')
+            cfg_rr.refchannel = data_pp.label;
+        else
+            error('Unknown cfg.reref_ieeg string. Use ''none'' or ''commonavg'' or cellstr of labels.');
+        end
+    elseif iscellstr(cfg.reref_ieeg) || isstring(cfg.reref_ieeg)
+        cfg_rr.refchannel = cellstr(cfg.reref_ieeg);
+    else
+        error('cfg.reref_ieeg must be ''none'', ''commonavg'', or a list of labels');
+    end
+    data_pp = ft_preprocessing(cfg_rr, data_pp);
+end
+
+% ---- 6) finalize metadata and event resync ----
+meta = struct();
+meta.subject      = data_in.cfg.meta.subject_id;
+meta.session      = data_in.cfg.meta.session_id;
+meta.n_channels   = numel(data_pp.label);
+meta.fsample      = data_pp.fsample;
+meta.pipeline     = struct('resample_hz', cfg.resample_hz, ...
+                           'hp_hz', cfg.hp_hz, 'lp_hz', cfg.lp_hz, ...
+                           'notch_hz', cfg.notch_hz, ...
+                           'car_eeg', cfg.car_eeg, 'reref_ieeg', cfg.reref_ieeg);
+meta.kept_labels  = data_pp.label(:);
+meta.dropped_labels = setdiff(cellstr(data_in.label), cellstr(meta.kept_labels));
+
+% resync events to new sampling rate, keep columns if present
+if ~isempty(events) && any(ismember(events.Properties.VariableNames,'onset'))
+    if ~ismember('sample', events.Properties.VariableNames)
+        events.sample = zeros(height(events),1);
+    end
+    events.sample = max(1, round(events.onset .* data_pp.fsample) + 1);
+end
+
+% keep channel table in cfg.meta, not at top level
+data_pp.cfg.meta = meta;
+data_pp.cfg.meta.channel_info = chan_tbl;
+
+end % main
+
+% ========= helpers =========
+
+function ensure_fieldtrip()
+    if exist('ft_defaults','file') ~= 2
+        error('FieldTrip not found on path. Add it, then rerun.');
     end
 end
 
-if isempty(session_path)
-    error('Session directory not found. Tried:\n%s', ...
-        strjoin(cellfun(@(x) fullfile(subject_path, x), possible_sessions, 'UniformOutput', false), '\n'));
+function s = ensure_struct(s)
+    if isempty(s), s = struct; end
 end
 
-% Look for data directories (try eeg first, then ieeg)
-possible_dirs = {'eeg', 'ieeg'};
-data_dir = '';
+function v = set_default(s, name, val)
+    if ~isfield(s, name) || isempty(s.(name))
+        v = val;
+    else
+        v = s.(name);
+    end
+    s.(name) = v; %#ok<NASGU> (silence)
+end
 
-for i = 1:length(possible_dirs)
-    test_dir = fullfile(session_path, possible_dirs{i});
-    if exist(test_dir, 'dir')
-        data_dir = test_dir;
-        fprintf('  Found data in: %s\n', test_dir);
-        break;
+function t = coerce_channel_table(raw)
+    if isfield(raw,'channel_info') && istable(raw.channel_info)
+        t = raw.channel_info;
+    else
+        % minimum scaffold from labels when channels.tsv missing
+        lbl = cellstr(raw.data.label(:));
+        t = table(lbl, repmat("EEG",numel(lbl),1), 'VariableNames', {'name','type'});
+    end
+    % standardize colnames
+    t.Properties.VariableNames = matlab.lang.makeUniqueStrings(lower(t.Properties.VariableNames));
+    if ~ismember('name', t.Properties.VariableNames)
+        error('channel_info must include a ''name'' column');
+    end
+    if ~ismember('type', t.Properties.VariableNames)
+        t.type = repmat("EEG",height(t),1);
+    else
+        t.type = string(t.type);
     end
 end
 
-if isempty(data_dir)
-    error('No eeg or ieeg directory found in: %s', session_path);
-end
-
-% Find ANY .edf file
-edf_files = dir(fullfile(data_dir, '*.edf'));
-if isempty(edf_files)
-    % Try .bdf
-    edf_files = dir(fullfile(data_dir, '*.bdf'));
-end
-if isempty(edf_files)
-    % Try .vhdr (BrainVision)
-    edf_files = dir(fullfile(data_dir, '*.vhdr'));
-end
-
-if isempty(edf_files)
-    error('No data files (.edf, .bdf, .vhdr) found in: %s', data_dir);
-end
-
-% Load first file found
-data_file = fullfile(data_dir, edf_files(1).name);
-fprintf('  Loading file: %s\n', edf_files(1).name);
-
-% Use FieldTrip to load
-cfg = [];
-cfg.dataset = data_file;
-cfg.continuous = 'yes';
-
-try
-    data = ft_preprocessing(cfg);
-    fprintf('  Loaded: %d channels, %.1f Hz, %.1f seconds\n', ...
-        length(data.label), data.fsample, data.time{1}(end));
-catch ME
-    error('Failed to load data: %s', ME.message);
-end
-
-% Try to load events (look for ANY events file)
-events_files = dir(fullfile(data_dir, '*events.tsv'));
-if ~isempty(events_files)
-    try
-        events = readtable(fullfile(data_dir, events_files(1).name), ...
-            'FileType', 'text', 'Delimiter', '\t');
-        data.events = events;
-        fprintf('  Loaded %d events\n', height(events));
-    catch
-        fprintf('  Could not load events\n');
+function e = coerce_events_table(raw)
+    if isfield(raw,'events') && istable(raw.events)
+        e = raw.events;
+    else
+        e = table(); % empty but valid
     end
 end
 
-% Try to load channel info
-channels_files = dir(fullfile(data_dir, '*channels.tsv'));
-if ~isempty(channels_files)
-    try
-        channels = readtable(fullfile(data_dir, channels_files(1).name), ...
-            'FileType', 'text', 'Delimiter', '\t');
-        data.channel_info = channels;
-        fprintf('  Loaded channel info\n');
-    catch
-        fprintf('  Could not load channel info\n');
+function sid = safe_id(raw, field)
+    sid = '';
+    if isfield(raw, field) && ~isempty(raw.(field))
+        sid = char(raw.(field));
     end
-end
-
-% Classify channels
-if isfield(data, 'channel_info') && istable(data.channel_info)
-    try
-        scalp_idx = strcmpi(data.channel_info.type, 'EEG');
-        ieeg_idx = strcmpi(data.channel_info.type, 'SEEG') | ...
-                   strcmpi(data.channel_info.type, 'ECOG') | ...
-                   strcmpi(data.channel_info.type, 'DBS');
-        
-        data.scalp_channels = data.label(scalp_idx);
-        data.ieeg_channels = data.label(ieeg_idx);
-    catch
-        % If classification fails, assume all are depth
-        data.scalp_channels = {};
-        data.ieeg_channels = data.label;
-    end
-else
-    % No channel info, assume all are depth
-    data.scalp_channels = {};
-    data.ieeg_channels = data.label;
-end
-
-fprintf('  %d scalp EEG, %d depth channels\n', ...
-    length(data.scalp_channels), length(data.ieeg_channels));
-
-% Store metadata
-data.subject = strrep(subject_id, 'sub-', '');
-data.session = strrep(session_id, 'ses-', '');
-
-end
-
-function data_filtered = apply_filtering(data, preproc_cfg)
-% APPLY_FILTERING - Apply filtering pipeline
-%
-% Resamples FIRST to ensure filter stability
-
-fprintf('Applying preprocessing pipeline...\n');
-
-%% STEP 1: RESAMPLE FIRST (critical for filter stability)
-if ~isempty(preproc_cfg.resample_freq) && preproc_cfg.resample_freq ~= data.fsample
-    fprintf('  1. Resampling: %.1f Hz -> %d Hz...', data.fsample, preproc_cfg.resample_freq);
-    tic;
-    
-    cfg = [];
-    cfg.resamplefs = preproc_cfg.resample_freq;
-    cfg.detrend = 'no';
-    cfg.demean = 'no';
-    
-    try
-        data = ft_resampledata(cfg, data);
-        fprintf(' ✓ (%.1f s)\n', toc);
-    catch ME
-        warning('Resampling failed: %s', ME.message);
-        fprintf(' ✗ (skipped)\n');
-    end
-else
-    fprintf('  1. Resampling: skipped\n');
-end
-
-%% STEP 2: DETREND
-if preproc_cfg.detrend
-    fprintf('  2. Detrending...');
-    tic;
-    
-    cfg = [];
-    cfg.detrend = 'yes';
-    cfg.demean = 'no';
-    
-    try
-        data = ft_preprocessing(cfg, data);
-        fprintf(' ✓ (%.1f s)\n', toc);
-    catch ME
-        warning('Detrending failed: %s', ME.message);
-        fprintf(' ✗ (failed)\n');
-    end
-else
-    fprintf('  2. Detrending: skipped\n');
-end
-
-%% STEP 3: DEMEAN
-if preproc_cfg.demean
-    fprintf('  3. Demeaning...');
-    tic;
-    
-    cfg = [];
-    cfg.demean = 'yes';
-    cfg.detrend = 'no';
-    
-    try
-        data = ft_preprocessing(cfg, data);
-        fprintf(' ✓ (%.1f s)\n', toc);
-    catch ME
-        warning('Demeaning failed: %s', ME.message);
-        fprintf(' ✗ (failed)\n');
-    end
-else
-    fprintf('  3. Demeaning: skipped\n');
-end
-
-%% STEP 4: BANDPASS FILTER
-fprintf('  4. Bandpass filtering: %.1f-%.1f Hz (order %d)...', ...
-    preproc_cfg.highpass, preproc_cfg.lowpass, preproc_cfg.order);
-tic;
-
-cfg = [];
-cfg.bpfilter = 'yes';
-cfg.bpfreq = [preproc_cfg.highpass preproc_cfg.lowpass];
-cfg.bpfiltord = preproc_cfg.order;
-cfg.bpfilttype = 'but';
-cfg.bpfiltdir = 'twopass';
-cfg.bpinstabilityfix = 'reduce';
-
-try
-    data = ft_preprocessing(cfg, data);
-    fprintf(' ✓ (%.1f s)\n', toc);
-catch ME
-    error('Bandpass filtering failed: %s', ME.message);
-end
-
-%% STEP 5: NOTCH FILTER
-if ~isempty(preproc_cfg.notch)
-    fprintf('  5. Notch filtering: %s Hz...', mat2str(preproc_cfg.notch));
-    tic;
-    
-    cfg = [];
-    cfg.dftfilter = 'yes';
-    cfg.dftfreq = preproc_cfg.notch;
-    
-    try
-        data = ft_preprocessing(cfg, data);
-        fprintf(' ✓ (%.1f s)\n', toc);
-    catch ME
-        warning('Notch filtering failed: %s', ME.message);
-        fprintf(' ✗ (failed)\n');
-    end
-else
-    fprintf('  5. Notch filtering: skipped\n');
-end
-
-data_filtered = data;
-fprintf('✓ Preprocessing complete\n\n');
-
-end
-
-function data_clean = detect_and_remove_artifacts(data, preproc_cfg)
-% DETECT_AND_REMOVE_ARTIFACTS - Simple artifact detection
-
-fprintf('Detecting artifacts...\n');
-
-if ~isfield(preproc_cfg, 'artifact')
-    fprintf('  Artifact detection disabled\n');
-    data_clean = data;
-    return;
-end
-
-% Concatenate all trials
-all_data = cat(2, data.trial{:});
-
-% Detect bad channels
-fprintf('  Checking channels...');
-channel_std = std(all_data, 0, 2);
-channel_max = max(abs(all_data), [], 2);
-
-z_std = (channel_std - median(channel_std)) / mad(channel_std, 1);
-z_max = (channel_max - median(channel_max)) / mad(channel_max, 1);
-
-bad_channels = abs(z_std) > preproc_cfg.artifact.z_threshold | ...
-               abs(z_max) > preproc_cfg.artifact.z_threshold;
-
-fprintf(' %d bad channels\n', sum(bad_channels));
-
-if any(bad_channels)
-    cfg = [];
-    cfg.channel = data.label(~bad_channels);
-    data = ft_selectdata(cfg, data);
-end
-
-data_clean = data;
-fprintf('✓ Artifact detection complete\n');
-
-end
-
-function data_reref = apply_rereferencing(data, preproc_cfg)
-% APPLY_REREFERENCING - Optional rereferencing
-
-fprintf('Applying rereferencing...\n');
-
-if ~isfield(preproc_cfg, 'reref')
-    data_reref = data;
-    return;
-end
-
-if isfield(data, 'scalp_channels') && ~isempty(data.scalp_channels)
-    cfg = [];
-    cfg.channel = data.scalp_channels;
-    cfg.reref = 'yes';
-    cfg.refchannel = 'all';
-    
-    try
-        data = ft_preprocessing(cfg, data);
-        fprintf('  ✓ Average reference for scalp\n');
-    catch
-        fprintf('  ✗ Average reference failed\n');
-    end
-end
-
-data_reref = data;
-fprintf('✓ Rereferencing complete\n');
-
-end
-
-function data_epochs = create_epochs(data, preproc_cfg)
-% CREATE_EPOCHS - Placeholder for epoching
-
-fprintf('Creating epochs...\n');
-
-if ~isfield(data, 'events') || isempty(data.events)
-    fprintf('  No events, keeping continuous\n');
-    data_epochs = data;
-    return;
-end
-
-fprintf('  Epoching not implemented yet\n');
-data_epochs = data;
-
+    % never use this as a struct field name, keep as value only
 end

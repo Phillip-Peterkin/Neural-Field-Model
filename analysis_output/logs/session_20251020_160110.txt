@@ -1,0 +1,10 @@
+disp('Workspace ready');
+Workspace ready
+fprintf('DATA_ROOT:   %s\n', DATA_ROOT);
+DATA_ROOT:   C:\openneuro\ds004752
+fprintf('OUTPUT_ROOT: %s\n', OUTPUT_ROOT);
+OUTPUT_ROOT: C:\Neural Network Sim\analysis_output
+assert(exist(DATA_ROOT,'dir')==7, 'DATA_ROOT not found');
+assert(exist(OUTPUT_ROOT,'dir')==7, 'OUTPUT_ROOT not found');
+
+diary(fullfile(OUTPUT_ROOT,'logs',sprintf('session_%s.txt',datestr(now,'yyyymmdd_HHMMSS'))));

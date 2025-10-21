@@ -1,0 +1,59 @@
+✓ FieldTrip initialized
+
+=== Configuration Summary ===
+Date: 2025-10-20 16:32:28
+MATLAB: 25.2.0.2998904 (R2025b)
+Data: C:\openneuro\ds004752
+Output: C:\Neural Network Sim\analysis_output
+Random seed: 42
+Parallel processing: no
+
+✓ Configuration initialized successfully
+=====================================
+
+Log file: C:\Neural Network Sim\analysis_output\logs\analysis_log_20251020_163228.txt
+
+=================================================================
+STAGE 1: DATA DISCOVERY AND QUALITY CONTROL
+=================================================================
+
+Discovering subjects and sessions in: C:\openneuro\ds004752
+  sub-01: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-02: 7 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06, ses-07)
+  sub-03: 3 sessions (ses-01, ses-02, ses-03)
+  sub-04: 2 sessions (ses-01, ses-02)
+  sub-05: 3 sessions (ses-01, ses-02, ses-03)
+  sub-06: 7 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06, ses-07)
+  sub-07: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-08: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-09: 2 sessions (ses-01, ses-02)
+  sub-10: 2 sessions (ses-01, ses-02)
+  sub-11: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-12: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-13: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-14: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+Found 14 subjects
+Found 1 subjects:
+  sub01: 0 sessions
+
+Running quality control checks...
+  QC for sub01... PASS
+
+Stage 1 completed in 0.0 seconds
+
+=================================================================
+STAGE 2: PREPROCESSING + STAGES 3–6 (Spectral / Connectivity / PAC / ERP / Validation)
+=================================================================
+
+
+Stage 2–6 completed in 0.0 seconds
+
+=================================================================
+STAGE 7: GROUP-LEVEL STATISTICS
+=================================================================
+
+Successfully analyzed: 0 spectral | 0 connectivity | 0 PAC | 0 ERP
+
+Group stats saved to: C:\Neural Network Sim\analysis_output\results\group_results.mat
+
+✓ Pipeline complete

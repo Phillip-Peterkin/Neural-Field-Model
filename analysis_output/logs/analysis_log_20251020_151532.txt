@@ -1,0 +1,372 @@
+Log file: C:\Neural Network Sim\analysis_output\logs\analysis_log_20251020_151532.txt
+
+=================================================================
+STAGE 1: DATA DISCOVERY AND QUALITY CONTROL
+=================================================================
+
+Discovering subjects and sessions...
+Discovering subjects and sessions in: C:\openneuro\ds004752
+  sub-01: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-02: 7 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06, ses-07)
+  sub-03: 3 sessions (ses-01, ses-02, ses-03)
+  sub-04: 2 sessions (ses-01, ses-02)
+  sub-05: 3 sessions (ses-01, ses-02, ses-03)
+  sub-06: 7 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06, ses-07)
+  sub-07: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-08: 4 sessions (ses-01, ses-02, ses-03, ses-04)
+  sub-09: 2 sessions (ses-01, ses-02)
+  sub-10: 2 sessions (ses-01, ses-02)
+  sub-11: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-12: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-13: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+  sub-14: 6 sessions (ses-01, ses-02, ses-03, ses-04, ses-05, ses-06)
+Found 14 subjects
+
+Found 14 subjects:
+  sub_01: 4 sessions
+  sub_02: 7 sessions
+  sub_03: 3 sessions
+  sub_04: 2 sessions
+  sub_05: 3 sessions
+  sub_06: 7 sessions
+  sub_07: 4 sessions
+  sub_08: 4 sessions
+  sub_09: 2 sessions
+  sub_10: 2 sessions
+  sub_11: 6 sessions
+  sub_12: 6 sessions
+  sub_13: 6 sessions
+  sub_14: 6 sessions
+
+Running quality control checks...
+  QC for sub_01... PASS
+  QC for sub_02... PASS
+  QC for sub_03... PASS
+  QC for sub_04... PASS
+  QC for sub_05... PASS
+  QC for sub_06... PASS
+  QC for sub_07... PASS
+  QC for sub_08... PASS
+  QC for sub_09... PASS
+  QC for sub_10... PASS
+  QC for sub_11... PASS
+  QC for sub_12... PASS
+  QC for sub_13... PASS
+  QC for sub_14... PASS
+
+Stage 1 completed in 0.0 seconds
+
+=================================================================
+STAGE 2: PREPROCESSING
+=================================================================
+
+
+Processing sub_01...
+  Session: ses-01
+    Loading data...Loading data for subject sub_01, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_01\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_01, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_01\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_01, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_01\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_01, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_01\ses-ses-04
+
+Processing sub_02...
+  Session: ses-01
+    Loading data...Loading data for subject sub_02, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_02\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_02, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_02\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_02, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_02\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_02, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_02\ses-ses-04
+  Session: ses-05
+    Loading data...Loading data for subject sub_02, session ses-05...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_02\ses-ses-05
+  Session: ses-06
+    Loading data...Loading data for subject sub_02, session ses-06...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_02\ses-ses-06
+  Session: ses-07
+    Loading data...Loading data for subject sub_02, session ses-07...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_02\ses-ses-07
+
+Processing sub_03...
+  Session: ses-01
+    Loading data...Loading data for subject sub_03, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_03\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_03, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_03\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_03, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_03\ses-ses-03
+
+Processing sub_04...
+  Session: ses-01
+    Loading data...Loading data for subject sub_04, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_04\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_04, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_04\ses-ses-02
+
+Processing sub_05...
+  Session: ses-01
+    Loading data...Loading data for subject sub_05, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_05\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_05, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_05\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_05, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_05\ses-ses-03
+
+Processing sub_06...
+  Session: ses-01
+    Loading data...Loading data for subject sub_06, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_06\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_06, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_06\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_06, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_06\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_06, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_06\ses-ses-04
+  Session: ses-05
+    Loading data...Loading data for subject sub_06, session ses-05...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_06\ses-ses-05
+  Session: ses-06
+    Loading data...Loading data for subject sub_06, session ses-06...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_06\ses-ses-06
+  Session: ses-07
+    Loading data...Loading data for subject sub_06, session ses-07...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_06\ses-ses-07
+
+Processing sub_07...
+  Session: ses-01
+    Loading data...Loading data for subject sub_07, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_07\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_07, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_07\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_07, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_07\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_07, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_07\ses-ses-04
+
+Processing sub_08...
+  Session: ses-01
+    Loading data...Loading data for subject sub_08, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_08\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_08, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_08\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_08, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_08\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_08, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_08\ses-ses-04
+
+Processing sub_09...
+  Session: ses-01
+    Loading data...Loading data for subject sub_09, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_09\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_09, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_09\ses-ses-02
+
+Processing sub_10...
+  Session: ses-01
+    Loading data...Loading data for subject sub_10, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_10\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_10, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_10\ses-ses-02
+
+Processing sub_11...
+  Session: ses-01
+    Loading data...Loading data for subject sub_11, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_11\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_11, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_11\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_11, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_11\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_11, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_11\ses-ses-04
+  Session: ses-05
+    Loading data...Loading data for subject sub_11, session ses-05...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_11\ses-ses-05
+  Session: ses-06
+    Loading data...Loading data for subject sub_11, session ses-06...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_11\ses-ses-06
+
+Processing sub_12...
+  Session: ses-01
+    Loading data...Loading data for subject sub_12, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_12\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_12, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_12\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_12, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_12\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_12, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_12\ses-ses-04
+  Session: ses-05
+    Loading data...Loading data for subject sub_12, session ses-05...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_12\ses-ses-05
+  Session: ses-06
+    Loading data...Loading data for subject sub_12, session ses-06...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_12\ses-ses-06
+
+Processing sub_13...
+  Session: ses-01
+    Loading data...Loading data for subject sub_13, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_13\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_13, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_13\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_13, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_13\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_13, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_13\ses-ses-04
+  Session: ses-05
+    Loading data...Loading data for subject sub_13, session ses-05...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_13\ses-ses-05
+  Session: ses-06
+    Loading data...Loading data for subject sub_13, session ses-06...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_13\ses-ses-06
+
+Processing sub_14...
+  Session: ses-01
+    Loading data...Loading data for subject sub_14, session ses-01...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_14\ses-ses-01
+  Session: ses-02
+    Loading data...Loading data for subject sub_14, session ses-02...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_14\ses-ses-02
+  Session: ses-03
+    Loading data...Loading data for subject sub_14, session ses-03...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_14\ses-ses-03
+  Session: ses-04
+    Loading data...Loading data for subject sub_14, session ses-04...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_14\ses-ses-04
+  Session: ses-05
+    Loading data...Loading data for subject sub_14, session ses-05...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_14\ses-ses-05
+  Session: ses-06
+    Loading data...Loading data for subject sub_14, session ses-06...
+    ERROR: No EEG or iEEG file found in C:\openneuro\ds004752\sub-sub_14\ses-ses-06
+
+Stage 2 completed in 0.1 seconds
+
+=================================================================
+STAGE 3: SPECTRAL ANALYSIS
+Testing 1/f aperiodic slope predictions
+=================================================================
+
+
+Stage 3 completed in 0.0 seconds
+
+=================================================================
+STAGE 4: CONNECTIVITY ANALYSIS
+Testing phase synchrony and directed connectivity
+=================================================================
+
+
+Stage 4 completed in 0.0 seconds
+
+=================================================================
+STAGE 5: PHASE-AMPLITUDE COUPLING
+Testing theta-gamma coupling (Tort modulation index)
+=================================================================
+
+
+Stage 5 completed in 0.0 seconds
+
+=================================================================
+STAGE 6: EVENT-RELATED POTENTIALS
+Testing N2 and P3b latencies (access windows)
+=================================================================
+
+
+Stage 6 completed in 0.0 seconds
+
+=================================================================
+STAGE 7: GROUP-LEVEL STATISTICS
+=================================================================
+
+Successfully analyzed: 0 spectral, 0 PAC
+Aggregating spectral results...
+  WARNING: No slope data collected!
+  WARNING: No theta power data collected!
+  WARNING: No alpha power data collected!
+  Mean 1/f slope: NaN ± NaN (n=1)
+  Mean theta power: NaN μV²
+  Mean alpha power: NaN μV²
+
+Aggregating PAC results...
+  WARNING: No PAC data collected!
+  Mean theta-gamma MI: NaN ± NaN (n=1)
+
+Stage 7 completed in 0.0 seconds
+
+=================================================================
+STAGE 8: VISUALIZATION
+=================================================================
+
+Generating figures in: C:\Neural Network Sim\analysis_output\figures\analysis_20251020_151532
+
+  Creating spectral summary figure... saved
+  Creating PAC summary figure... saved
+
+Stage 8 completed in 2.6 seconds
+
+=================================================================
+STAGE 9: FINAL REPORT AND MODEL VALIDATION
+Testing theoretical predictions from Section 15
+=================================================================
+
+Summary report saved: C:\Neural Network Sim\analysis_output\results\analysis_summary_20251020_151532.txt
+
+Stage 9 completed in 0.0 seconds
+
+=================================================================
+  ANALYSIS COMPLETE
+=================================================================
+
+Total analysis time: 0.0 minutes (0.0 hours)
+
+Results saved to: C:\Neural Network Sim\analysis_output
+Figures saved to: C:\Neural Network Sim\analysis_output\figures\analysis_20251020_151532
+Summary report: C:\Neural Network Sim\analysis_output\results\analysis_summary_20251020_151532.txt
+
+KEY FINDINGS:
+-------------
+1/f Exponent: NaN ± NaN (validates E-I balance model)
+Theta Power: NaN μV² (NaNx stronger than alpha)
+Theta-Gamma PAC: NaN ± NaN (validates Equation 12)
+
+These results support the theoretical predictions in:
+  - Section 11: Cross-Frequency Coupling as Control
+  - Section 13.1: Spectral Density and Aperiodic Slope
+  - Section 15.1: Respiration-Locked Theta Modulation
+  - Section 15.4: Aperiodic Slope and Parvalbumin Maturation
+
