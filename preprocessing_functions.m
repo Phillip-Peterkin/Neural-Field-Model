@@ -1,126 +1,163 @@
-function data_pre = preprocessing_functions(cfg, data_raw)
+function data_out = preprocessing_functions(data_raw, cfg)
 % PREPROCESSING_FUNCTIONS
-% High-level EEG/iEEG preprocessing routine for HFT pipeline.
-% This function standardizes and cleans electrophysiological data for further analyses.
-% Designed for reproducibility, modularity, and FieldTrip/EEGLAB compatibility.
+% Robust preprocessing for EEG/iEEG using FieldTrip.
+% Accepts FieldTrip-like input or raw EEGLAB EEG and repairs missing fields.
+%
+% Signature: data_out = preprocessing_functions(data_raw, cfg)
 
-%% ==============================
-%  Stage 2: Preprocessing Overview
-%  ==============================
-fprintf('\n[Stage 2] Starting preprocessing...\n');
+% ---------- Validate or coerce input ----------
+coerced = false;
+if ~isstruct(data_raw)
+    warning('%s','Invalid input: data_raw is not a struct.');
+    data_out = struct();
+    return
+end
 
+% Detect FieldTrip-like
+isFT = isfield(data_raw,'trial') && iscell(data_raw.trial) && isfield(data_raw,'label');
+% Detect EEGLAB EEG
+isEEG = isfield(data_raw,'data') && isnumeric(data_raw.data) && isfield(data_raw,'srate');
+
+if ~isFT && isEEG
+    % EEGLAB EEG -> FieldTrip raw
+    tmp = struct();
+    tmp.trial   = {double(data_raw.data)};
+    tmp.time    = { (0:size(data_raw.data,2)-1) / max(data_raw.srate,eps) };
+    tmp.fsample = double(data_raw.srate);
+    if isfield(data_raw,'chanlocs') && ~isempty(data_raw.chanlocs)
+        lbl = {data_raw.chanlocs.labels};
+        if isempty(lbl) || all(cellfun(@isempty,lbl))
+            lbl = arrayfun(@(k)sprintf('ch%d',k), 1:size(data_raw.data,1), 'uni',0);
+        end
+        tmp.label = lbl(:)';
+    else
+        tmp.label = arrayfun(@(k)sprintf('ch%d',k), 1:size(data_raw.data,1), 'uni',0);
+    end
+    data_raw = tmp; clear tmp; coerced = true;
+end
+
+% After coercion, verify minimal fields
+if ~isfield(data_raw,'trial') || isempty(data_raw.trial) || ~iscell(data_raw.trial) || ~isfield(data_raw,'label')
+    warning('%s', 'Invalid input: data_raw missing expected structure fields.');
+    data_out = struct();
+    return
+end
+
+if coerced
+    fprintf('[preprocessing] Coerced EEGLAB EEG to FieldTrip format. Channels: %d\n', numel(data_raw.label));
+end
+
+% ---------- Ensure fsample and time ----------
+if ~isfield(data_raw,'fsample') || isempty(data_raw.fsample)
+    data_raw.fsample = infer_fsample(data_raw);
+end
+
+if ~isfield(data_raw,'time') || isempty(data_raw.time) || numel(data_raw.time) ~= numel(data_raw.trial)
+    data_raw.time = cell(size(data_raw.trial));
+    for k = 1:numel(data_raw.trial)
+        n = size(data_raw.trial{k},2);
+        data_raw.time{k} = (0:n-1)/max(eps, data_raw.fsample);
+    end
+end
+
+% ---------- Pull preprocessing params ----------
+p = struct();
+p.highpass      = getfield_or(cfg,'preprocessing.highpass',      1.0);
+% use safe defaults for the rest
+p.lowpass       = getfield_or(cfg,'preprocessing.lowpass',       200.0);
+p.notch         = getfield_or(cfg,'preprocessing.notch',         [60 120 180]);
+p.resample_rate = getfield_or(cfg,'preprocessing.resample_rate',  500);
+p.detrend       = tf(getfield_or(cfg,'preprocessing.detrend',     true));
+p.demean        = tf(getfield_or(cfg,'preprocessing.demean',      true));
+p.reref         = tf(getfield_or(cfg,'preprocessing.reref',       false));
+p.refchannel    = getfield_or(cfg,'preprocessing.refchannel',     'all');
+
+% ---------- Pipeline ----------
 try
-    %% Step 1. Verify Input Structure
-    if isempty(data_raw) || ~isfield(data_raw, 'trial')
-        error('Invalid input: data_raw missing expected structure fields.');
-    end
-    fprintf('Input data verified.\n');
-
-    %% Step 2. Standardize Channel Layout
-    cfg_layout = [];
-    cfg_layout.layout = cfg.preprocessing.layout;
-    cfg_layout.channel = 'all';
-    try
-        ft_layoutplot(cfg_layout);
-        close all;
-    catch
-        warning('Unable to visualize channel layout, continuing without plot.');
+    % 1) Optional re-reference
+    c = [];
+    if p.reref
+        c.reref      = 'yes';
+        c.refchannel = p.refchannel;
+        data_raw = ft_preprocessing(c, data_raw);
     end
 
-    %% Step 3. Re-reference Data (if required)
-    if isfield(cfg.preprocessing, 'reref') && cfg.preprocessing.reref
-        cfg_ref = [];
-        cfg_ref.reref = 'yes';
-        cfg_ref.refchannel = cfg.preprocessing.refchannel;
-        data_ref = ft_preprocessing(cfg_ref, data_raw);
+    % 2) Detrend / Demean
+    c = [];
+    if p.detrend, c.detrend = 'yes'; else, c.detrend = 'no'; end
+    if p.demean
+        c.demean  = 'yes';
+        c.baselinewindow = [data_raw.time{1}(1) min(0, data_raw.time{1}(end))];
     else
-        data_ref = data_raw;
+        c.demean  = 'no';
     end
-    fprintf('Re-referencing complete.\n');
+    data1 = ft_preprocessing(c, data_raw);
 
-    %% Step 4. Filtering (High-pass, Low-pass, Notch)
-    cfg_filt = [];
-    cfg_filt.hpfilter = 'yes';
-    cfg_filt.hpfreq = cfg.preprocessing.highpass;
-    cfg_filt.lpfilter = 'yes';
-    cfg_filt.lpfreq = cfg.preprocessing.lowpass;
-    cfg_filt.bsfilter = 'yes';
-    cfg_filt.bsfreq = cfg.preprocessing.notch;
-
-    data_filt = ft_preprocessing(cfg_filt, data_ref);
-    fprintf('Filtering complete.\n');
-
-    %% Step 5. Artifact Rejection and Detrending
-    cfg_clean = [];
-    cfg_clean.demean = 'yes';
-    cfg_clean.detrend = 'yes';
-    cfg_clean.artfctdef.reject = 'partial';
-    cfg_clean.artfctdef.zvalue.channel = 'all';
-    cfg_clean.artfctdef.zvalue.cutoff = cfg.preprocessing.z_cutoff;
-
-    try
-        [cfg_clean, artifact] = ft_artifact_zvalue(cfg_clean, data_filt);
-        data_clean = ft_rejectartifact(cfg_clean, data_filt);
-        fprintf('Artifact rejection complete: %d segments removed.\n', size(artifact,1));
-    catch ME
-        warning('%s', ME.message);
-        warning('Artifact rejection failed; proceeding with filtered data.');
-        data_clean = data_filt;
+    % 3) HP/LP filters
+    c = [];
+    if ~isempty(p.highpass) && p.highpass > 0
+        c.hpfilter = 'yes'; c.hpfreq = p.highpass;
+    end
+    if ~isempty(p.lowpass) && p.lowpass > 0
+        c.lpfilter = 'yes'; c.lpfreq = p.lowpass;
+    end
+    if ~isempty(fieldnames(c))
+        data1 = ft_preprocessing(c, data1);
     end
 
-    %% Step 6. Resampling
-    cfg_resamp = [];
-    cfg_resamp.resamplefs = cfg.preprocessing.resample_rate;
-    cfg_resamp.detrend = 'no';
-    data_resamp = ft_resampledata(cfg_resamp, data_clean);
-    fprintf('Data resampled to %.1f Hz.\n', cfg.preprocessing.resample_rate);
-
-    %% Step 7. Channel Inspection and Repair
-    bad_chans = detect_bad_channels(data_resamp);
-    if ~isempty(bad_chans)
-        cfg_interp = [];
-        cfg_interp.method = 'spline';
-        cfg_interp.badchannel = bad_chans;
-        data_interp = ft_channelrepair(cfg_interp, data_resamp);
-        fprintf('Interpolated %d bad channels.\n', numel(bad_chans));
-    else
-        data_interp = data_resamp;
+    % 4) Notch
+    if ~isempty(p.notch)
+        c = [];
+        c.dftfilter = 'yes'; c.dftfreq = p.notch;
+        data1 = ft_preprocessing(c, data1);
     end
 
-    %% Step 8. Normalize Trial Lengths
-    cfg_trim = [];
-    cfg_trim.length = cfg.preprocessing.trial_length;
-    cfg_trim.overlap = cfg.preprocessing.trial_overlap;
-    data_pre = ft_redefinetrial(cfg_trim, data_interp);
-    fprintf('Trials redefined to %.2f s with %.2f s overlap.\n', ...
-            cfg.preprocessing.trial_length, cfg.preprocessing.trial_overlap);
-
-    %% Step 9. Final Consistency Check
-    if isempty(data_pre.trial) || isempty(data_pre.time)
-        error('Preprocessing failed: output structure empty or malformed.');
+    % 5) Resample
+    if ~isempty(p.resample_rate) && isnumeric(p.resample_rate) && p.resample_rate > 0
+        c = []; c.resamplefs = p.resample_rate; c.detrend = 'no';
+        data1 = ft_resampledata(c, data1);
     end
 
-    fprintf('Preprocessing successful for subject.\n');
-
+    data_out = data1;
 catch ME
     warning('%s', ME.message);
-    warning('Preprocessing stage failed. Returning empty structure.');
-    data_pre = struct();
+    data_out = struct();
+end
 end
 
-end
-
-%% ==============================
-% Helper Function: Detect Bad Channels
-% ==============================
-function bad_chans = detect_bad_channels(data)
+% ================= Helpers ==================
+function fs = infer_fsample(d)
 try
-    chan_var = cellfun(@(x) var(x(:)), data.trial);
-    mean_var = mean(chan_var);
-    std_var = std(chan_var);
-    bad_idx = find(chan_var > mean_var + 3*std_var);
-    bad_chans = data.label(bad_idx);
+    if isfield(d,'time') && ~isempty(d.time) && ~isempty(d.time{1})
+        dt = diff(d.time{1}); fs = 1/median(dt(~isnan(dt) & isfinite(dt)));
+        if ~isfinite(fs) || fs <= 0, fs = 1000; end
+    elseif isfield(d,'hdr') && isfield(d.hdr,'Fs') && ~isempty(d.hdr.Fs)
+        fs = double(d.hdr.Fs);
+    else
+        fs = 1000;
+    end
 catch
-    bad_chans = {};
+    fs = 1000;
 end
+end
+
+function val = getfield_or(cfg, dotted, defaultVal)
+try
+    parts = split(string(dotted), '.'); S = cfg;
+    for i = 1:numel(parts)
+        name = strtrim(parts{i});
+        if isstruct(S) && isfield(S, name)
+            S = S.(name);
+        else
+            val = defaultVal; return
+        end
+    end
+    if isempty(S), val = defaultVal; else, val = S; end
+catch
+    val = defaultVal;
+end
+end
+
+function t = tf(x)
+if islogical(x), t = x; elseif isnumeric(x), t = x ~= 0; else, t = false; end
 end
