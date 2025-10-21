@@ -69,7 +69,8 @@ parfor s = 1:num_subjects
     try
         % ---- Stage 2: Preprocessing ----
         data_raw = load_raw_data(cfg.paths.data, subj_name, subj.sessions{1}, cfg);
-        data_pre = preprocessing_functions(cfg.preprocessing, data_raw);
+        % RIGHT
+        data_pre = preprocessing_functions(data_raw, cfg);
         save_stage_output(cfg, subj_name, 'preprocessed', data_pre);
 
         % ---- Stage 3: Spectral Analysis ----
