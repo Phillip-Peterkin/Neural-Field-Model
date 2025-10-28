@@ -1,0 +1,203 @@
+[1/9] Loading configuration...
+✓ Configuration loaded: 15 parameter groups
+      ✓ Configuration loaded
+
+[2/9] Initializing BIDS data handler...
+BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+      ✓ Found 1 subject(s): sub-01
+
+[3/9] Setting up parallel processing...
+      ✓ Parallel pool: 10 workers
+
+[4/9] Starting fresh analysis
+
+[5/9] Processing subjects...
+═══════════════════════════════════════════════════════════════
+
+  → Subject 1/1: sub-01
+
+┌─────────────────────────────────────────────────────┐
+│ Processing: sub-01                                   │
+└─────────────────────────────────────────────────────┘
+[Stage 0] Loading data...
+
+✗✗✗ PROCESSING FAILED ✗✗✗
+Error: Unrecognized field name "sub_01".
+└─────────────────────────────────────────────────────┘
+
+  ✓ Subject sub-01 completed
+
+═══════════════════════════════════════════════════════════════
+
+[6/9] Running group-level analysis...
+Computing group-level statistics...
+[Warning: No valid subject results for group analysis] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('aggregate_group_results', 'C:\HarmonicFieldTheory\code\core\aggregate_group_results.m', 30)" style="font-weight:bold">aggregate_group_results</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\aggregate_group_results.m',30,0)">line 30</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 117)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',117,0)">line 117</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>test_single_subject', 'C:\HarmonicFieldTheory\test_pipeline.m', 130)" style="font-weight:bold">test_pipeline>test_single_subject</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',130,0)">line 130</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 21)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',21,0)">line 21</a>)] 
+      ✓ Group statistics computed
+
+[7/9] Running cross-validation...
+Running cross-validation...
+[Warning: Need at least 2 subjects for cross-validation] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_cross_validation', 'C:\HarmonicFieldTheory\code\core\run_cross_validation.m', 26)" style="font-weight:bold">run_cross_validation</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\run_cross_validation.m',26,0)">line 26</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 122)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',122,0)">line 122</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>test_single_subject', 'C:\HarmonicFieldTheory\test_pipeline.m', 130)" style="font-weight:bold">test_pipeline>test_single_subject</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',130,0)">line 130</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 21)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',21,0)">line 21</a>)] 
+      ✓ Out-of-sample accuracy: NaN%
+
+[8/9] Generating figures...
+Generating figures...
+
+❌ PIPELINE FAILED
+Error: Unrecognized field name "spectral".
+Stack trace:
+Unrecognized field name "spectral".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/plot_spectral_fingerprints', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 51)" style="font-weight:bold">VisualizationEngine/plot_spectral_fingerprints</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',51,0)">line 51</a>)
+            freqs = group_results.spectral.mean_spectrum(1, :);
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/generate_all_figures', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 27)" style="font-weight:bold">VisualizationEngine/generate_all_figures</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',27,0)">line 27</a>)
+            obj.plot_spectral_fingerprints(group_results);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 129)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',129,0)">line 129</a>)
+    visualization_engine.generate_all_figures(results, group_results, validation);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>test_single_subject', 'C:\HarmonicFieldTheory\test_pipeline.m', 130)" style="font-weight:bold">test_pipeline>test_single_subject</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',130,0)">line 130</a>)
+    run_harmonic_field_pipeline('subject', 'sub-01');
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 21)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',21,0)">line 21</a>)
+        test_results = test_single_subject();
+                       ^^^^^^^^^^^^^^^^^^^^^
+
+Crash dump saved: logs\crash_20251027_211213.mat
+───────────────────────────────────────────────────
+ ✗ Pipeline failed: Unrecognized field name "spectral".
+
+✗✗✗ TEST FAILED ✗✗✗
+Error details: logs\crash_20251027_211213.mat
+
+
+ans = 
+
+  <a href="matlab:helpPopup('struct')" style="font-weight:bold">struct</a> with fields:
+
+       mode: 'single'
+    subject: 'sub-01'
+    success: 0
+      error: 'Unrecognized field name "spectral".'
+
+test_pipeline('single')
+{test_pipeline is not found in the current folder or on the MATLAB path, but exists in:
+    C:\HarmonicFieldTheory
+
+<a href = "matlab:internal.matlab.desktop.commandwindow.executeCommandForUser('cd ''C:\HarmonicFieldTheory''')">Change the MATLAB current folder</a> or <a href = "matlab:internal.matlab.desktop.commandwindow.executeCommandForUser('addpath ''C:\HarmonicFieldTheory''')">add its folder to the MATLAB path</a>.
+} 
+test_pipeline('single')
+
+╔═══════════════════════════════════════════════════╗
+║     HARMONIC FIELD THEORY - PIPELINE TEST        ║
+╚═══════════════════════════════════════════════════╝
+
+SINGLE SUBJECT TEST
+═══════════════════════════════════════════════════
+
+[1/3] Configuration...✓ Configuration loaded: 15 parameter groups
+ ✓
+[2/3] Data availability...BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+ ✗ Invalid field name: 'sub-01'.
+
+✗✗✗ TEST FAILED ✗✗✗
+
+
+ans = 
+
+  <a href="matlab:helpPopup('struct')" style="font-weight:bold">struct</a> with fields:
+
+       mode: 'single'
+    subject: 'sub-01'
+      error: 'Invalid field name: 'sub-01'.'
+
+internal.matlab.datatoolsservices.VariableUtils.saveWorkspace
+test_pipeline('validate')
+
+╔═══════════════════════════════════════════════════╗
+║     HARMONIC FIELD THEORY - PIPELINE TEST        ║
+╚═══════════════════════════════════════════════════╝
+
+VALIDATION MODE
+═══════════════════════════════════════════════════
+
+[1/3] Configuration...✓ Configuration loaded: 15 parameter groups
+ ✓
+[2/3] Data...BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+ ✗ Invalid field name: 'sub-01'.
+[3/3] Core files... ✓
+
+✗✗✗ VALIDATION FAILED ✗✗✗
+
+
+ans = 
+
+  <a href="matlab:helpPopup('struct')" style="font-weight:bold">struct</a> with fields:
+
+      mode: 'validate'
+    passed: 2
+    failed: 1
+
+cd 'C:\HarmonicFieldTheory'
+!git init
+Initialized empty Git repository in C:/HarmonicFieldTheory/.git/
+!git remote add origin https://github.com/PhillipPeterkin/Neural-Field-Model.git
+!git add .
+warning: in the working copy of 'logs/pipeline_20251027_205635.log', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'logs/pipeline_20251027_210110.log', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'logs/pipeline_20251027_210208.log', LF will be replaced by CRLF the next time Git touches it
+!git commit -m "Safe upload of recovered files"
+[master (root-commit) af6268f] Safe upload of recovered files
+ 34 files changed, 4656 insertions(+)
+ create mode 100644 README.md
+ create mode 100644 code/core/BIDSDataHandler.m
+ create mode 100644 code/core/VisualizationEngine.m
+ create mode 100644 code/core/aggregate_group_results.m
+ create mode 100644 code/core/generate_final_report.m
+ create mode 100644 code/core/process_single_subject.m
+ create mode 100644 code/core/run_cross_validation.m
+ create mode 100644 code/stages/AccessDetector.m
+ create mode 100644 code/stages/ConnectivityAnalyzer.m
+ create mode 100644 code/stages/ERPAnalyzer.m
+ create mode 100644 code/stages/EnergyBudget.m
+ create mode 100644 code/stages/PACAnalyzer.m
+ create mode 100644 code/stages/SpectralAnalyzer.m
+ create mode 100644 code/stages/TaskDecoder.m
+ create mode 100644 code/utilities/helper_functions.m
+ create mode 100644 code/utilities/shadedErrorBar.m
+ create mode 100644 config/config_harmonic_field.m
+ create mode 100644 logs/crash_20251027_205658.mat
+ create mode 100644 logs/crash_20251027_210111.mat
+ create mode 100644 logs/crash_20251027_210208.mat
+ create mode 100644 logs/crash_20251027_210431.mat
+ create mode 100644 logs/crash_20251027_210520.mat
+ create mode 100644 logs/crash_20251027_210529.mat
+ create mode 100644 logs/crash_20251027_211007.mat
+ create mode 100644 logs/crash_20251027_211213.mat
+ create mode 100644 logs/crash_test_20251027_210042.mat
+ create mode 100644 logs/pipeline_20251027_205635.log
+ create mode 100644 logs/pipeline_20251027_210110.log
+ create mode 100644 logs/pipeline_20251027_210208.log
+ create mode 100644 logs/pipeline_20251027_211213.log
+ create mode 100644 process_single_subject.m
+ create mode 100644 results/checkpoints/sub-01_FAILED.mat
+ create mode 100644 run_harmonic_field_pipeline.m
+ create mode 100644 test_pipeline.m
+!git branch -M main
+!git push -u origin main --force
+remote: Repository not found.
+fatal: repository 'https://github.com/PhillipPeterkin/Neural-Field-Model.git/' not found
