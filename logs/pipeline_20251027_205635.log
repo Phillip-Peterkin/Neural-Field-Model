@@ -1,0 +1,191 @@
+[1/9] Loading configuration...
+✓ Configuration loaded: 15 parameter groups
+      ✓ Configuration loaded
+
+[2/9] Initializing BIDS data handler...
+BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+      ✓ Found 1 subject(s): sub-01
+
+[3/9] Setting up parallel processing...
+Starting parallel pool (parpool) using the 'Processes' profile ...
+Connected to parallel pool with 10 workers.
+      ✓ Parallel pool: 10 workers
+
+[4/9] Starting fresh analysis
+
+[5/9] Processing subjects...
+═══════════════════════════════════════════════════════════════
+
+  → Subject 1/1: sub-01
+
+┌─────────────────────────────────────────────────────┐
+│ Processing: sub-01                                   │
+└─────────────────────────────────────────────────────┘
+[Stage 0] Loading data...
+
+✗✗✗ PROCESSING FAILED ✗✗✗
+Error: Unrecognized field name "sub_01".
+└─────────────────────────────────────────────────────┘
+
+  ✓ Subject sub-01 completed
+
+═══════════════════════════════════════════════════════════════
+
+[6/9] Running group-level analysis...
+Computing group-level statistics...
+[Warning: No valid subject results for group analysis] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('aggregate_group_results', 'C:\HarmonicFieldTheory\code\core\aggregate_group_results.m', 30)" style="font-weight:bold">aggregate_group_results</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\aggregate_group_results.m',30,0)">line 30</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 117)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',117,0)">line 117</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 185)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',185,0)">line 185</a>)] 
+      ✓ Group statistics computed
+
+[7/9] Running cross-validation...
+Running cross-validation...
+[Warning: Need at least 2 subjects for cross-validation] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_cross_validation', 'C:\HarmonicFieldTheory\code\core\run_cross_validation.m', 26)" style="font-weight:bold">run_cross_validation</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\run_cross_validation.m',26,0)">line 26</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 122)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',122,0)">line 122</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 185)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',185,0)">line 185</a>)] 
+      ✓ Out-of-sample accuracy: NaN%
+
+[8/9] Generating figures...
+Generating figures...
+
+❌ PIPELINE FAILED
+Error: Unrecognized field name "spectral".
+Stack trace:
+Unrecognized field name "spectral".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/plot_spectral_fingerprints', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 51)" style="font-weight:bold">VisualizationEngine/plot_spectral_fingerprints</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',51,0)">line 51</a>)
+            freqs = group_results.spectral.mean_spectrum(1, :);
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/generate_all_figures', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 27)" style="font-weight:bold">VisualizationEngine/generate_all_figures</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',27,0)">line 27</a>)
+            obj.plot_spectral_fingerprints(group_results);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 129)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',129,0)">line 129</a>)
+    visualization_engine.generate_all_figures(results, group_results, validation);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 185)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',185,0)">line 185</a>)
+            run_harmonic_field_pipeline('subject', 'sub-01');
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Crash dump saved: logs\crash_20251027_205658.mat
+
+❌ PIPELINE FAILED
+Error: Unrecognized field name "spectral".
+
+Stack trace:
+  VisualizationEngine.plot_spectral_fingerprints (line 51)
+  VisualizationEngine.generate_all_figures (line 27)
+  run_harmonic_field_pipeline (line 129)
+  test_pipeline (line 185)
+
+Check logs/ folder for detailed error information.
+
+{Unrecognized field name "spectral".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/plot_spectral_fingerprints', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 51)" style="font-weight:bold">VisualizationEngine/plot_spectral_fingerprints</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',51,0)">line 51</a>)
+            freqs = group_results.spectral.mean_spectrum(1, :);
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/generate_all_figures', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 27)" style="font-weight:bold">VisualizationEngine/generate_all_figures</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',27,0)">line 27</a>)
+            obj.plot_spectral_fingerprints(group_results);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 129)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',129,0)">line 129</a>)
+    visualization_engine.generate_all_figures(results, group_results, validation);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 185)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',185,0)">line 185</a>)
+            run_harmonic_field_pipeline('subject', 'sub-01');
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+test_pipeline('validate')
+
+╔════════════════════════════════════════════════════════════════╗
+║           HARMONIC FIELD THEORY - PIPELINE TEST SUITE         ║
+║                        Version 1.0.0                           ║
+╚════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+  VALIDATION MODE - Checking Installation
+═══════════════════════════════════════════════════════════════
+
+[1/10] Checking MATLAB version...
+  ✓ MATLAB 2025b (required: 2020b or later)
+[2/10] Checking required toolboxes...
+{Error using <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('license')" style="font-weight:bold">license</a>
+Feature name must be less than 28 characters.
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>run_validation_tests', 'C:\HarmonicFieldTheory\test_pipeline.m', 97)" style="font-weight:bold">test_pipeline>run_validation_tests</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',97,0)">line 97</a>)
+    if license('test', strrep(required_toolboxes{i}, ' ', '_'))
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 42)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',42,0)">line 42</a>)
+        test_results = run_validation_tests();
+                       ^^^^^^^^^^^^^^^^^^^^^^
+} 
+test_pipeline('single')
+
+╔════════════════════════════════════════════════════════════════╗
+║           HARMONIC FIELD THEORY - PIPELINE TEST SUITE         ║
+║                        Version 1.0.0                           ║
+╚════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+  SINGLE SUBJECT TEST MODE
+═══════════════════════════════════════════════════════════════
+
+[1/5] Loading configuration...
+✓ Configuration loaded: 15 parameter groups
+  ✓ Configuration loaded
+
+[2/5] Initializing data handler...
+BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+  ✓ Subject sub-01 found
+
+[3/5] Running pipeline for sub-01...
+─────────────────────────────────────────────────────────────
+
+╔════════════════════════════════════════════════════════════════╗
+║                        TEST FAILED                             ║
+╠════════════════════════════════════════════════════════════════╣
+║  Error: Too many output arguments.                             ║
+╚════════════════════════════════════════════════════════════════╝
+
+Crash dump saved: logs\crash_test_20251027_210042.mat
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                      TEST SUMMARY                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Mode: SINGLE SUBJECT                                          ║
+║  Subject: sub-01                                               ║
+{Unrecognized field name "execution_time".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>display_final_summary', 'C:\HarmonicFieldTheory\test_pipeline.m', 529)" style="font-weight:bold">test_pipeline>display_final_summary</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',529,0)">line 529</a>)
+        fprintf('║  Execution time: %.1f seconds                                  ║\n', results.execution_time);
+                                                                                            ^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 56)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',56,0)">line 56</a>)
+display_final_summary(test_results, test_duration);
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+test_pipeline('benchmark')
+
+╔════════════════════════════════════════════════════════════════╗
+║           HARMONIC FIELD THEORY - PIPELINE TEST SUITE         ║
+║                        Version 1.0.0                           ║
+╚════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+  BENCHMARK MODE
+═══════════════════════════════════════════════════════════════
+
+Running 3 iterations for benchmarking...
+
+Iteration 1/3...
+
+╔════════════════════════════════════════════════════════════════╗
+║         HARMONIC FIELD THEORY ANALYSIS PIPELINE               ║
+║  Energy, Coherence, and Content: Neural Access Prerequisites  ║
+╚════════════════════════════════════════════════════════════════╝
+

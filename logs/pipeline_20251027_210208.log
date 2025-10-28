@@ -1,0 +1,405 @@
+[1/9] Loading configuration...
+✓ Configuration loaded: 15 parameter groups
+      ✓ Configuration loaded
+
+[2/9] Initializing BIDS data handler...
+BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+      ✓ Found 1 subject(s): sub-01
+
+[3/9] Setting up parallel processing...
+      ✓ Parallel pool: 10 workers
+
+[4/9] Starting fresh analysis
+
+[5/9] Processing subjects...
+═══════════════════════════════════════════════════════════════
+
+  → Subject 1/1: sub-01
+
+┌─────────────────────────────────────────────────────┐
+│ Processing: sub-01                                   │
+└─────────────────────────────────────────────────────┘
+[Stage 0] Loading data...
+
+✗✗✗ PROCESSING FAILED ✗✗✗
+Error: Unrecognized field name "sub_01".
+└─────────────────────────────────────────────────────┘
+
+  ✓ Subject sub-01 completed
+
+═══════════════════════════════════════════════════════════════
+
+[6/9] Running group-level analysis...
+Computing group-level statistics...
+[Warning: No valid subject results for group analysis] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('aggregate_group_results', 'C:\HarmonicFieldTheory\code\core\aggregate_group_results.m', 30)" style="font-weight:bold">aggregate_group_results</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\aggregate_group_results.m',30,0)">line 30</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 117)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',117,0)">line 117</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>run_benchmark_test', 'C:\HarmonicFieldTheory\test_pipeline.m', 487)" style="font-weight:bold">test_pipeline>run_benchmark_test</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',487,0)">line 487</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 51)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',51,0)">line 51</a>)] 
+      ✓ Group statistics computed
+
+[7/9] Running cross-validation...
+Running cross-validation...
+[Warning: Need at least 2 subjects for cross-validation] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_cross_validation', 'C:\HarmonicFieldTheory\code\core\run_cross_validation.m', 26)" style="font-weight:bold">run_cross_validation</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\run_cross_validation.m',26,0)">line 26</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 122)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',122,0)">line 122</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>run_benchmark_test', 'C:\HarmonicFieldTheory\test_pipeline.m', 487)" style="font-weight:bold">test_pipeline>run_benchmark_test</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',487,0)">line 487</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 51)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',51,0)">line 51</a>)] 
+      ✓ Out-of-sample accuracy: NaN%
+
+[8/9] Generating figures...
+Generating figures...
+
+❌ PIPELINE FAILED
+Error: Unrecognized field name "spectral".
+Stack trace:
+Unrecognized field name "spectral".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/plot_spectral_fingerprints', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 51)" style="font-weight:bold">VisualizationEngine/plot_spectral_fingerprints</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',51,0)">line 51</a>)
+            freqs = group_results.spectral.mean_spectrum(1, :);
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/generate_all_figures', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 27)" style="font-weight:bold">VisualizationEngine/generate_all_figures</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',27,0)">line 27</a>)
+            obj.plot_spectral_fingerprints(group_results);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 129)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',129,0)">line 129</a>)
+    visualization_engine.generate_all_figures(results, group_results, validation);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>run_benchmark_test', 'C:\HarmonicFieldTheory\test_pipeline.m', 487)" style="font-weight:bold">test_pipeline>run_benchmark_test</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',487,0)">line 487</a>)
+    run_harmonic_field_pipeline('subject', opts.subject);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 51)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',51,0)">line 51</a>)
+        test_results = run_benchmark_test(opts);
+                       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+Crash dump saved: logs\crash_20251027_210208.mat
+{Unrecognized field name "spectral".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/plot_spectral_fingerprints', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 51)" style="font-weight:bold">VisualizationEngine/plot_spectral_fingerprints</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',51,0)">line 51</a>)
+            freqs = group_results.spectral.mean_spectrum(1, :);
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('VisualizationEngine/generate_all_figures', 'C:\HarmonicFieldTheory\code\core\VisualizationEngine.m', 27)" style="font-weight:bold">VisualizationEngine/generate_all_figures</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\code\core\VisualizationEngine.m',27,0)">line 27</a>)
+            obj.plot_spectral_fingerprints(group_results);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_harmonic_field_pipeline', 'C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m', 129)" style="font-weight:bold">run_harmonic_field_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\run_harmonic_field_pipeline.m',129,0)">line 129</a>)
+    visualization_engine.generate_all_figures(results, group_results, validation);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>run_benchmark_test', 'C:\HarmonicFieldTheory\test_pipeline.m', 487)" style="font-weight:bold">test_pipeline>run_benchmark_test</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',487,0)">line 487</a>)
+    run_harmonic_field_pipeline('subject', opts.subject);
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 51)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',51,0)">line 51</a>)
+        test_results = run_benchmark_test(opts);
+                       ^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+test_pipeline('benchmark')
+
+╔════════════════════════════════════════════════════════════════╗
+║        HARMONIC FIELD THEORY - PIPELINE TEST SUITE            ║
+║                     Version 1.0.1                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                       TEST FAILED                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Error: Unknown mode: benchmark. Use: validate, single, or all ║
+╚════════════════════════════════════════════════════════════════╝
+
+Crash info saved: logs\crash_20251027_210431.mat
+
+╔════════════════════════════════════════════════════════════════╗
+║                      TEST SUMMARY                              ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                ║
+║  Test duration: 0.0 seconds                                   ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+ans = 
+
+  <a href="matlab:helpPopup('struct')" style="font-weight:bold">struct</a> with fields:
+
+             mode: 'benchmark'
+        timestamp: '27-Oct-2025 21:04:31'
+          success: 0
+    error_message: 'Unknown mode: benchmark. Use: validate, single, or all'
+      error_stack: [1×1 struct]
+       total_time: 0.0114
+
+test_pipeline('validate')
+
+╔════════════════════════════════════════════════════════════════╗
+║        HARMONIC FIELD THEORY - PIPELINE TEST SUITE            ║
+║                     Version 1.0.1                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+  VALIDATION MODE
+═══════════════════════════════════════════════════════════════
+
+[1/8] MATLAB version...
+  ✓ MATLAB (R2025b)
+[2/8] Statistics Toolbox...
+  ✓ Statistics Toolbox available
+[3/8] Signal Processing Toolbox...
+  ✓ Signal Processing Toolbox available
+[4/8] Configuration file...
+✓ Configuration loaded: 15 parameter groups
+  ✓ config_harmonic_field.m loaded
+[5/8] Directory structure...
+  ✓ All directories present
+[6/8] Core pipeline files...
+  ✓ Core files present
+[7/8] Stage analyzer classes...
+  ✓ Analyzer classes present
+[8/8] Data availability...
+BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+  ✓ Found 14 subject(s): sub-01, sub-02, sub-03, sub-04, sub-05, sub-06, sub-07, sub-08, sub-09, sub-10, sub-11, sub-12, sub-13, sub-14
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                      TEST SUMMARY                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Mode: VALIDATION                                              ║
+║  Passed:  8  |  Failed:  0                                   ║
+╠════════════════════════════════════════════════════════════════╣
+║  ✓✓✓ VALIDATION PASSED ✓✓✓                                     ║
+║                                                                ║
+║  Next: run test_pipeline('single') to test with one subject   ║
+║                                                                ║
+║  Test duration: 0.1 seconds                                   ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+ans = 
+
+  <a href="matlab:helpPopup('struct')" style="font-weight:bold">struct</a> with fields:
+
+                 mode: 'validate'
+         tests_passed: 8
+         tests_failed: 0
+               config: [1×1 struct]
+       subjects_found: {14×1 cell}
+    validation_passed: 1
+              success: 1
+           total_time: 0.1356
+
+test_pipeline('single') 
+
+╔════════════════════════════════════════════════════════════════╗
+║        HARMONIC FIELD THEORY - PIPELINE TEST SUITE            ║
+║                     Version 1.0.1                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+  SINGLE SUBJECT TEST
+═══════════════════════════════════════════════════════════════
+
+[1/4] Loading configuration...
+✓ Configuration loaded: 15 parameter groups
+  ✓ Configuration loaded
+
+[2/4] Checking data...
+BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+  ✓ Subject sub-01 found
+
+[3/4] Running pipeline...
+─────────────────────────────────────────────────────────────
+
+
+─────────────────────────────────────────────────────────────
+  ✗ Pipeline FAILED: Too many output arguments.
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                       TEST FAILED                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Error: Pipeline execution failed                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+Crash info saved: logs\crash_20251027_210520.mat
+
+╔════════════════════════════════════════════════════════════════╗
+║                      TEST SUMMARY                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Mode: SINGLE SUBJECT TEST                                     ║
+{Unrecognized field name "subject".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>display_test_summary', 'C:\HarmonicFieldTheory\test_pipeline.m', 452)" style="font-weight:bold">test_pipeline>display_test_summary</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',452,0)">line 452</a>)
+        fprintf('║  Subject: %-52s ║\n', results.subject);
+                                             ^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 71)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',71,0)">line 71</a>)
+display_test_summary(test_results);
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+test_pipeline('single')
+
+╔════════════════════════════════════════════════════════════════╗
+║        HARMONIC FIELD THEORY - PIPELINE TEST SUITE            ║
+║                     Version 1.0.1                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+  SINGLE SUBJECT TEST
+═══════════════════════════════════════════════════════════════
+
+[1/4] Loading configuration...
+✓ Configuration loaded: 15 parameter groups
+  ✓ Configuration loaded
+
+[2/4] Checking data...
+BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+  ✓ Subject sub-01 found
+
+[3/4] Running pipeline...
+─────────────────────────────────────────────────────────────
+
+
+─────────────────────────────────────────────────────────────
+  ✗ Pipeline FAILED: Too many output arguments.
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                       TEST FAILED                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Error: Pipeline execution failed                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+Crash info saved: logs\crash_20251027_210529.mat
+
+╔════════════════════════════════════════════════════════════════╗
+║                      TEST SUMMARY                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Mode: SINGLE SUBJECT TEST                                     ║
+{Unrecognized field name "subject".
+
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline>display_test_summary', 'C:\HarmonicFieldTheory\test_pipeline.m', 452)" style="font-weight:bold">test_pipeline>display_test_summary</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',452,0)">line 452</a>)
+        fprintf('║  Subject: %-52s ║\n', results.subject);
+                                             ^
+Error in <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('test_pipeline', 'C:\HarmonicFieldTheory\test_pipeline.m', 71)" style="font-weight:bold">test_pipeline</a> (<a href="matlab: opentoline('C:\HarmonicFieldTheory\test_pipeline.m',71,0)">line 71</a>)
+display_test_summary(test_results);
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+test_pipeline('single')
+
+╔════════════════════════════════════════════════════════════════╗
+║        HARMONIC FIELD THEORY - PIPELINE TEST SUITE            ║
+║                     Version 1.0.1                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+  SINGLE SUBJECT TEST
+═══════════════════════════════════════════════════════════════
+
+[1/4] Loading configuration...
+✓ Configuration loaded: 15 parameter groups
+  ✓ Configuration loaded
+
+[2/4] Checking data...
+BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+  ✓ Subject sub-01 found
+
+[3/4] Running pipeline...
+─────────────────────────────────────────────────────────────
+
+
+─────────────────────────────────────────────────────────────
+  ✗ Pipeline FAILED: Too many output arguments.
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                       TEST FAILED                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Error: Pipeline execution failed                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+Crash info saved: logs\crash_20251027_211007.mat
+
+╔════════════════════════════════════════════════════════════════╗
+║                      TEST SUMMARY                              ║
+╠════════════════════════════════════════════════════════════════╣
+║  Mode: SINGLE SUBJECT TEST                                     ║
+║  Subject: (not specified)                                      ║
+╠════════════════════════════════════════════════════════════════╣
+║  ✗✗✗ TEST FAILED ✗✗✗                                           ║
+║  Error: Pipeline execution failed                              ║
+║                                                                ║
+║  Test duration: 0.0 seconds                                   ║
+╚════════════════════════════════════════════════════════════════╝
+
+For detailed error info, check: C:\HarmonicFieldTheory\logs\crash_20251027_211007.mat
+
+
+ans = 
+
+  <a href="matlab:helpPopup('struct')" style="font-weight:bold">struct</a> with fields:
+
+             mode: 'single'
+        timestamp: '27-Oct-2025 21:10:07'
+          success: 0
+    error_message: 'Pipeline execution failed'
+      error_stack: [2×1 struct]
+       total_time: 0.0267
+
+test_pipeline('validate')
+
+╔═══════════════════════════════════════════════════╗
+║     HARMONIC FIELD THEORY - PIPELINE TEST        ║
+╚═══════════════════════════════════════════════════╝
+
+VALIDATION MODE
+═══════════════════════════════════════════════════
+
+[1/3] Configuration...✓ Configuration loaded: 15 parameter groups
+ ✓
+[2/3] Data...BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+ ✓ (14 subjects)
+[3/3] Core files... ✓
+
+✓✓✓ VALIDATION PASSED ✓✓✓
+Next: test_pipeline('single')
+
+
+ans = 
+
+  <a href="matlab:helpPopup('struct')" style="font-weight:bold">struct</a> with fields:
+
+        mode: 'validate'
+      passed: 3
+      failed: 0
+    subjects: {14×1 cell}
+
+test_pipeline('single')
+
+╔═══════════════════════════════════════════════════╗
+║     HARMONIC FIELD THEORY - PIPELINE TEST        ║
+╚═══════════════════════════════════════════════════╝
+
+SINGLE SUBJECT TEST
+═══════════════════════════════════════════════════
+
+[1/3] Configuration...✓ Configuration loaded: 15 parameter groups
+ ✓
+[2/3] Data availability...BIDS Data Handler initialized
+  Dataset: Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+  Root: C:\openneuro\ds004752
+ ✓
+[3/3] Running pipeline...
+───────────────────────────────────────────────────
+
+╔════════════════════════════════════════════════════════════════╗
+║         HARMONIC FIELD THEORY ANALYSIS PIPELINE               ║
+║  Energy, Coherence, and Content: Neural Access Prerequisites  ║
+╚════════════════════════════════════════════════════════════════╝
+
